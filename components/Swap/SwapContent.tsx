@@ -2,6 +2,7 @@ import React from 'react';
 import { Flex, Text, chakra, Box, Input, Button } from '@chakra-ui/react';
 import TokenList from '../TokenList/TokenList';
 import ToggleToken from '../ToggleToken/ToggleToken';
+import SwapSide from './SwapSide';
 
 function SwapContent() {
   return (
@@ -59,6 +60,8 @@ function SwapContent() {
         </Flex>
       </Box>
       <ToggleToken />
+      <SwapSide swapSide="receive" balanceAmount={1} />
+      <TokenList />
     </Flex>
   );
 }
