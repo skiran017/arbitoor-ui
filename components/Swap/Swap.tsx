@@ -1,6 +1,7 @@
 import React from 'react';
 import { Flex, Text, chakra } from '@chakra-ui/react';
 import TitleContent from './TitleContent';
+import SwapBody from './SwapBody';
 
 function Swap() {
   return (
@@ -13,6 +14,7 @@ function Swap() {
         marginTop="40px"
       >
         <TitleContent />
+        <SwapBody />
       </Flex>
     </Flex>
   );
