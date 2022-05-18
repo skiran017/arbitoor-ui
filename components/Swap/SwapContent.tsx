@@ -1,5 +1,6 @@
 import React from 'react';
-import { Flex, Text, chakra, Box, Input } from '@chakra-ui/react';
+import { Flex, Text, chakra, Box, Input, Button } from '@chakra-ui/react';
+import TokenList from '../TokenList/TokenList';
 
 function SwapContent() {
   return (
@@ -43,12 +44,16 @@ function SwapContent() {
           alignItems="center"
           paddingY="14px"
         >
+          <TokenList />
+
           <Input
             fontWeight="600"
             fontSize="1.125rem"
             variant="unstyled"
             textAlign="right"
             placeholder="0.00"
+            type="number"
+            min="1"
           />
         </Flex>
       </Box>
