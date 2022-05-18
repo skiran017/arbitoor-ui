@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Text, chakra, Box } from '@chakra-ui/react';
+import { Flex, Text, chakra, Box, Input } from '@chakra-ui/react';
 
 function SwapContent() {
   return (
@@ -32,6 +32,26 @@ function SwapContent() {
           </Flex>
         </Box>
       </Flex>
+      <Box
+        paddingX="14px"
+        backgroundColor="rgb(235 239 241/1)"
+        height="64px"
+        borderRadius="14px"
+      >
+        <Flex
+          justifyContent="space-between"
+          alignItems="center"
+          paddingY="14px"
+        >
+          <Input
+            fontWeight="600"
+            fontSize="1.125rem"
+            variant="unstyled"
+            textAlign="right"
+            placeholder="0.00"
+          />
+        </Flex>
+      </Box>
     </Flex>
   );
 }
