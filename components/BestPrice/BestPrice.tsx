@@ -1,7 +1,6 @@
 import React from 'react';
 import { Flex, Text, chakra, Box, Input } from '@chakra-ui/react';
 import Image from 'next/image';
-import { bestPriceList } from '../../utils/bestPriceList';
 
 function BestPrice() {
   return (
