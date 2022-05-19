@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react';
 
 import { tokenList } from '../../utils/tokenList';
+import { Token } from '../../types';
 
 interface Props {
   selectToken: (token: Token) => void;
