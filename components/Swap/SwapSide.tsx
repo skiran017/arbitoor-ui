@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Text, chakra, Box, Input, Button } from '@chakra-ui/react';
+import { Flex, Text, chakra, Box } from '@chakra-ui/react';
 
 interface Props {
   swapSide: string;

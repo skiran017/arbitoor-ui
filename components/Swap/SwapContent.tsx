@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Flex, Text, chakra, Box, Input, Button } from '@chakra-ui/react';
+import { Flex, Box, Input } from '@chakra-ui/react';
 import TokenList from '../TokenList/TokenList';
 import ToggleToken from '../ToggleToken/ToggleToken';
 import SwapSide from './SwapSide';
 import BestPrice from '../BestPrice/BestPrice';
 import CustomButton from '../CustomButton/CustomButton';
 import { tokenList } from '../../utils/tokenList';
+import { Token } from '../../types';
 
 function SwapContent() {
   const [payToken, setPayToken] = useState<Token>(tokenList[0]);
@@ -21,6 +22,9 @@ function SwapContent() {
     setPayToken(receiveToken);
     setReceiveToken(payToken);
   }
+  function handleSwap() {
+    alert('swap successful');
+  }
   return (
     <>
       <Flex
@@ -29,29 +33,7 @@ function SwapContent() {
         borderRadius="14px"
         padding="32px 22px"
       >
-        <Flex
-          justifyContent="space-between"
-          alignItems="flex-end"
-          fontSize="0.75rem"
-          lineHeight="1rem"
-          paddingBottom="14px"
-        >
-          <Text fontWeight="600" fontSize="0.875rem" lineHeight="1.25rem">
-            <chakra.span>You pay</chakra.span>
-          </Text>
-          <Box>
-            <Flex
-              width="100%"
-              justifyContent="space-between"
-              alignItems="center"
-              color="black"
-              fontSize="0.75rem"
-              lineHeight="1rem"
-            >
-              <chakra.span>Balance : 10</chakra.span>
-            </Flex>
-          </Box>
-        </Flex>
+        <SwapSide swapSide="pay" balanceAmount={10} />
         <Box
           paddingX="14px"
           backgroundColor="rgb(235 239 241/1)"
@@ -90,7 +72,7 @@ function SwapContent() {
           marginBottom: '48px',
         }}
       />
-      <CustomButton />
+      <CustomButton text="Swap" swapHandler={handleSwap} />
     </>
   );
 }

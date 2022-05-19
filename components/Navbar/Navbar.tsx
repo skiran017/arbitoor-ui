@@ -3,8 +3,8 @@ import Image from 'next/image';
 import { Text } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
-import styles from './Navbar.module.css';
 import NavLinks from '../NavLinks';
+import CustomButton from '../CustomButton/CustomButton';
 
 function Navbar() {
   return (
@@ -13,6 +13,7 @@ function Navbar() {
       alignItems="center"
       w="100%"
       p="1rem 2rem"
+      fontWeight="600"
     >
       <Flex flex="1 1 0%">
         <Image src="/assets/logo.png" alt="brand logo" height={40} width={50} />
@@ -20,16 +21,23 @@ function Navbar() {
           Cykura
         </Text>
       </Flex>
-      <NavLinks styleClass="nav-links" />
+      <NavLinks />
       <Flex flex="1 1 0%" justifyContent="flex-end">
-        <Button
+        {/* <Button
           bgColor="black"
           color="white"
           borderRadius="14px"
           _hover={{ bgColor: 'black' }}
         >
           Connect Wallet
-        </Button>
+        </Button> */}
+        {/* <CustomButton
+          bgColor="black"
+          color="white"
+          borderRadius="14px"
+          _hover={{ bgColor: 'black' }}
+          text="Signout"
+        /> */}
       </Flex>
     </Flex>
   );

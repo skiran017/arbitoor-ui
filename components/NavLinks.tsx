@@ -5,7 +5,7 @@ import { links } from '../utils/navLinks';
 import Image from 'next/image';
 
 interface Props {
-  styleClass: string;
+  styleClass?: string;
 }
 
 export default function NavLinks({ styleClass }: Props) {

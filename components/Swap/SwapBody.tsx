@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Text, Box, chakra, Button } from '@chakra-ui/react';
+import { Box, chakra } from '@chakra-ui/react';
 import SwapContent from './SwapContent';
 
 function SwapBody() {
