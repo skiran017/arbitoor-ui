@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Flex, Text, chakra, Box, Input, Button } from '@chakra-ui/react';
 import TokenList from '../TokenList/TokenList';
 import ToggleToken from '../ToggleToken/ToggleToken';
 import SwapSide from './SwapSide';
 import BestPrice from '../BestPrice/BestPrice';
 import CustomButton from '../CustomButton/CustomButton';
+import { tokenList } from '../../utils/tokenList';
 
 function SwapContent() {
+  const [payToken, setPayToken] = useState<Token>(tokenList[0]);
+  const [receiveToken, setReceiveToken] = useState<Token>(tokenList[1]);
+
+  function selectPayToken(token: Token) {
+    setPayToken(token);
+  }
+  function selectReceiveToken(token: Token) {
+    setReceiveToken(token);
+  }
   return (
     <>
       <Flex
@@ -49,7 +59,7 @@ function SwapContent() {
             alignItems="center"
             paddingY="14px"
           >
-            <TokenList />
+            <TokenList selectToken={selectPayToken} token={payToken} />
 
             <Input
               fontWeight="600"
@@ -62,9 +72,13 @@ function SwapContent() {
             />
           </Flex>
         </Box>
+
         <ToggleToken />
+
         <SwapSide swapSide="receive" balanceAmount={1} />
-        <TokenList />
+
+        <TokenList selectToken={selectReceiveToken} token={receiveToken} />
+
         <BestPrice />
       </Flex>
       <div

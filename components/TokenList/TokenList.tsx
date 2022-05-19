@@ -17,7 +17,12 @@ import {
 
 import { tokenList } from '../../utils/tokenList';
 
-function TokenList() {
+interface Props {
+  selectToken: (token: Token) => void;
+  token: Token;
+}
+
+function TokenList({ selectToken, token }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const initialRef = React.useRef(null);
@@ -43,7 +48,7 @@ function TokenList() {
               height={5}
               borderRadius="12px"
             />
-            <Text marginLeft="6px"> SOL</Text>
+            <Text marginLeft="6px"> {token?.ticker}</Text>
             <Image
               src="/assets/icons/downArrow.svg"
               alt="arrow down"
@@ -110,10 +115,16 @@ function TokenList() {
                 direction="column"
               >
                 <Box maxH="75vh" color="black" overflowY="scroll">
-                  {tokenList.map((token) => {
+                  {tokenList.map((token: Token) => {
                     return (
-                      <chakra.a key={token.id}>
-                        <Box _hover={{ bgColor: '#eee' }} padding="14px 48px">
+                      <chakra.a key={token.id} onClick={onClose}>
+                        <Box
+                          _hover={{ bgColor: '#eee' }}
+                          padding="14px 48px"
+                          onClick={() => {
+                            selectToken(token);
+                          }}
+                        >
                           <Flex>
                             <Flex>
                               <Flex direction="column">
