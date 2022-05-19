@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flex, Box, Input } from '@chakra-ui/react';
 import TokenList from '../TokenList/TokenList';
 import ToggleToken from '../ToggleToken/ToggleToken';
@@ -6,11 +6,19 @@ import SwapSide from './SwapSide';
 import BestPrice from '../BestPrice/BestPrice';
 import CustomButton from '../CustomButton/CustomButton';
 import { tokenList } from '../../utils/tokenList';
+import useConnection from '../../hooks/useConnection';
+
 import { Token } from '../../types';
 
 function SwapContent() {
   const [payToken, setPayToken] = useState<Token>(tokenList[0]);
   const [receiveToken, setReceiveToken] = useState<Token>(tokenList[1]);
+
+  const { handleSignIn, isLoading, isSignedIn, load } = useConnection();
+
+  useEffect(() => {
+    load();
+  }, []);
 
   function selectPayToken(token: Token) {
     setPayToken(token);
@@ -72,7 +80,13 @@ function SwapContent() {
           marginBottom: '48px',
         }}
       />
-      <CustomButton text="Swap" swapHandler={handleSwap} />
+      <CustomButton
+        btnType="swap"
+        text="Connect Wallet"
+        isSignedIn={isSignedIn}
+        isLoading={isLoading}
+        swapHandler={isSignedIn ? handleSwap : handleSignIn}
+      />
     </>
   );
 }

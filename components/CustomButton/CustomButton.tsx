@@ -1,59 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Box } from '@chakra-ui/react';
-import * as nearAPI from 'near-api-js';
-import { Account } from '../../types';
+import { Button, Box, ButtonProps } from '@chakra-ui/react';
 
-interface Props {
+interface Props extends ButtonProps {
   text: string;
-  props?: any;
   swapHandler?: () => void;
+  btnType?: string;
+  isLoading?: boolean;
+  isSignedIn?: boolean;
 }
 
-function CustomButton({ text, props, swapHandler }: Props) {
-  const [account, setAccount] = useState<Account | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [wallet, setWallet] = useState<any>();
-
-  useEffect(() => {
-    load();
-  }, []);
-
-  const load = async () => {
-    if (typeof window !== 'undefined') {
-      const { connect, keyStores, WalletConnection } = nearAPI;
-      const keyStore = new keyStores.BrowserLocalStorageKeyStore();
-      const config = {
-        networkId: 'testnet',
-        keyStore,
-        nodeUrl: 'https://rpc.testnet.near.org',
-        walletUrl: 'https://wallet.testnet.near.org',
-        helperUrl: 'https://helper.testnet.near.org',
-        explorerUrl: 'https://explorer.testnet.near.org',
-        headers: '',
-      };
-
-      // connect to NEAR
-      const near = await connect(config);
-
-      // create wallet connection
-      const wallet = new WalletConnection(near, null);
-      setWallet(wallet);
-    }
-  };
-
-  const handleSignIn = () => {
-    wallet.requestSignIn();
-  };
-
-  const signOut = () => {
-    wallet.signOut();
-  };
-
-  if (loading) {
+function CustomButton({
+  text,
+  swapHandler,
+  btnType,
+  isLoading,
+  isSignedIn,
+  ...props
+}: Props) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (wallet?.isSignedIn()) {
+  if (isSignedIn && btnType === 'swap') {
     return (
       <Button
         position="relative"
@@ -65,9 +33,8 @@ function CustomButton({ text, props, swapHandler }: Props) {
         height="56px"
         marginTop="16px"
         {...props}
-        onClick={swapHandler}
       >
-        {text}
+        Swap
       </Button>
     );
   }
@@ -83,9 +50,9 @@ function CustomButton({ text, props, swapHandler }: Props) {
           _hover={{ bgColor: 'black' }}
           height="56px"
           marginTop="16px"
-          onClick={handleSignIn}
+          {...props}
         >
-          Connect Wallet
+          {text}
         </Button>
       </Box>
     </>

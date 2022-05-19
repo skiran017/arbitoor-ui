@@ -5,8 +5,10 @@ import { Button } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
 import NavLinks from '../NavLinks';
 import CustomButton from '../CustomButton/CustomButton';
+import useConnection from '../../hooks/useConnection';
 
 function Navbar() {
+  const { handleSignOut, isSignedIn, handleSignIn } = useConnection();
   return (
     <Flex
       justifyContent="space-between"
@@ -23,21 +25,16 @@ function Navbar() {
       </Flex>
       <NavLinks />
       <Flex flex="1 1 0%" justifyContent="flex-end">
-        {/* <Button
+        <CustomButton
           bgColor="black"
           color="white"
           borderRadius="14px"
+          width="156px"
+          height="48px"
+          onClick={isSignedIn ? handleSignOut : handleSignIn}
           _hover={{ bgColor: 'black' }}
-        >
-          Connect Wallet
-        </Button> */}
-        {/* <CustomButton
-          bgColor="black"
-          color="white"
-          borderRadius="14px"
-          _hover={{ bgColor: 'black' }}
-          text="Signout"
-        /> */}
+          text={isSignedIn ? 'Signout' : 'Connect Wallet'}
+        />
       </Flex>
     </Flex>
   );
