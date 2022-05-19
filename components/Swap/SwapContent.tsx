@@ -17,6 +17,10 @@ function SwapContent() {
   function selectReceiveToken(token: Token) {
     setReceiveToken(token);
   }
+  function tokenSwitchHandler() {
+    setPayToken(receiveToken);
+    setReceiveToken(payToken);
+  }
   return (
     <>
       <Flex
@@ -73,7 +77,7 @@ function SwapContent() {
           </Flex>
         </Box>
 
-        <ToggleToken />
+        <ToggleToken handleTokenSwitch={tokenSwitchHandler} />
 
         <SwapSide swapSide="receive" balanceAmount={1} />
 

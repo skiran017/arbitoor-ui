@@ -1,10 +1,14 @@
 import React from 'react';
 import { Flex, Image, Box } from '@chakra-ui/react';
 
-function ToggleToken() {
+interface Props {
+  handleTokenSwitch: () => void;
+}
+
+function ToggleToken({ handleTokenSwitch }: Props) {
   return (
     <Box marginTop="48px">
-      <Flex justifyContent="center">
+      <Flex justifyContent="center" onClick={handleTokenSwitch}>
         <Flex
           color="black"
           backgroundColor="rgb(235 239 241/1)"
