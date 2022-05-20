@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import * as nearAPI from 'near-api-js';
+import { useRouter } from 'next/router'
 import { useGlobalStore } from '../utils/globalStore';
 
 
 function useConnection() {
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [wallet, setWallet] = useState<any>(null);
-  // const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
+  const router = useRouter()
+
+  const [storageData, setStorageData] = useState<any>(null);
 
   const [isLoading, isSignedIn, wallet, setIsLoading, setIsSignedIn, setWallet] = useGlobalStore((state) => [state.connectionState.isLoading,
   state.connectionState.isSignedIn,
@@ -17,12 +18,21 @@ function useConnection() {
   ]);
 
   useEffect(() => {
-    // console.log(wallet)
-    if (wallet && wallet.isSignedIn()) {
 
+    if (wallet?.isSignedIn()) {
+      if (typeof window !== 'undefined') {
+        setStorageData(JSON.parse(window.localStorage.getItem("null_wallet_auth_key")!))
+      }
+    }
+  }, [wallet])
+
+  useEffect(() => {
+    if (storageData?.allKeys[0]) {
       setIsSignedIn(true)
     }
-  }, [])
+  }, [storageData])
+
+
 
 
 
@@ -38,6 +48,7 @@ function useConnection() {
         helperUrl: 'https://helper.testnet.near.org',
         explorerUrl: 'https://explorer.testnet.near.org',
         headers: {},
+        contractName: 'skiran017.testnet'
       };
 
       setIsLoading(true);
@@ -57,11 +68,12 @@ function useConnection() {
     setIsSignedIn(true);
   };
 
-  const handleSignOut = () => {
-
-    wallet.signOut();
-    setWallet(null);
+  function handleSignOut() {
+    wallet?.signOut();
+    localStorage.clear();
+    setStorageData(null)
     setIsSignedIn(false)
+    router.push('/')
   };
 
   return {
@@ -70,7 +82,6 @@ function useConnection() {
     handleSignIn,
     handleSignOut,
     isSignedIn
-
   }
 }
 

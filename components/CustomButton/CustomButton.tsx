@@ -32,6 +32,7 @@ function CustomButton({
         _hover={{ bgColor: 'black' }}
         height="56px"
         marginTop="16px"
+        onClick={swapHandler}
         {...props}
       >
         Swap
@@ -50,6 +51,7 @@ function CustomButton({
           _hover={{ bgColor: 'black' }}
           height="56px"
           marginTop="16px"
+          onClick={swapHandler}
           {...props}
         >
           {text}
