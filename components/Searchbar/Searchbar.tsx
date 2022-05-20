@@ -9,8 +9,8 @@ function Searchbar() {
     setShow(!show);
   };
   return (
-    <Flex justifyContent="center">
-      <Box w="100%" maxW="450px">
+    <Flex justifyContent="center" position="relative">
+      <Box w="100%" maxW="450px" position="relative">
         <Box>
           <Box
             onClick={toggleDropDown}

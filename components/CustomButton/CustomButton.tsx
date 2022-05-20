@@ -1,20 +1,63 @@
-import React from 'react';
-import { Flex, Text, chakra, Box, Button } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { Button, Box, ButtonProps } from '@chakra-ui/react';
 
-function CustomButton() {
+interface Props extends ButtonProps {
+  text: string;
+  swapHandler?: () => void;
+  btnType?: string;
+  isLoading?: boolean;
+  isSignedIn?: boolean;
+}
+
+function CustomButton({
+  text,
+  swapHandler,
+  btnType,
+  isLoading,
+  isSignedIn,
+  ...props
+}: Props) {
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isSignedIn && btnType === 'swap') {
+    return (
+      <Button
+        position="relative"
+        width="100%"
+        bgColor="black"
+        color="white"
+        borderRadius="14px"
+        _hover={{ bgColor: 'black' }}
+        height="56px"
+        marginTop="16px"
+        onClick={swapHandler}
+        {...props}
+      >
+        Swap
+      </Button>
+    );
+  }
   return (
-    <Button
-      position="relative"
-      width="100%"
-      marginTop="16px"
-      bgColor="black"
-      color="white"
-      borderRadius="14px"
-      height="56px"
-      _hover={{ bgColor: 'black' }}
-    >
-      Connect Wallet
-    </Button>
+    <>
+      <Box>
+        <Button
+          position="relative"
+          width="100%"
+          bgColor="black"
+          color="white"
+          borderRadius="14px"
+          _hover={{ bgColor: 'black' }}
+          height="56px"
+          marginTop="16px"
+          onClick={swapHandler}
+          {...props}
+        >
+          {text}
+        </Button>
+      </Box>
+    </>
   );
 }
 

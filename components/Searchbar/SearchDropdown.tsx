@@ -13,9 +13,9 @@ function SearchDropdown() {
   return (
     <Box
       position="absolute"
-      inset="56px auto auto 0px"
+      top="64px"
+      left="0"
       maxW="450px"
-      transform="translate3d(541.935px, 78.2258px, 0px)"
       w="100%"
       zIndex="20"
     >

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Text, chakra } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import TitleContent from './TitleContent';
 import SwapBody from './SwapBody';
 
