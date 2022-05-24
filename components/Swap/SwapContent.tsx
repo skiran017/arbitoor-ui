@@ -37,14 +37,17 @@ function SwapContent() {
     <>
       <Flex
         direction="column"
-        bgColor="white"
+        // bgColor="whitesmoke"
+        bgColor="#26262C"
         borderRadius="14px"
         padding="32px 22px"
+        color="whitesmoke"
       >
         <SwapSide swapSide="pay" balanceAmount={10} />
         <Box
           paddingX="14px"
-          backgroundColor="rgb(235 239 241/1)"
+          backgroundColor="#101010"
+          // backgroundColor="white"
           height="64px"
           borderRadius="14px"
         >
@@ -68,16 +71,18 @@ function SwapContent() {
         </Box>
 
         <ToggleToken handleTokenSwitch={tokenSwitchHandler} />
+        <Box>
+          <SwapSide swapSide="receive" balanceAmount={1} />
 
-        <SwapSide swapSide="receive" balanceAmount={1} />
+          <TokenList selectToken={selectReceiveToken} token={receiveToken} />
 
-        <TokenList selectToken={selectReceiveToken} token={receiveToken} />
-
-        <BestPrice />
+          <BestPrice />
+        </Box>
       </Flex>
+
       <div
         style={{
-          marginBottom: '48px',
+          marginBottom: '18px',
         }}
       />
       <CustomButton

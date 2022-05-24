@@ -17,7 +17,8 @@ function Searchbar() {
             onBlur={toggleDropDown}
             w="100%"
             borderRadius="14px"
-            bgColor="white"
+            // bgColor="white"
+            bgColor="#26262C"
             padding="6px 20px"
             marginTop="8px"
             boxShadow={
@@ -37,6 +38,7 @@ function Searchbar() {
                 placeholder="You can try 10 NEAR to USDC"
                 border="none"
                 _focus={{ boxShadow: 'none' }}
+                color="whitesmoke"
               />
             </Flex>
           </Box>

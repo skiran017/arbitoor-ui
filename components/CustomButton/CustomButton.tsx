@@ -26,13 +26,13 @@ function CustomButton({
       <Button
         position="relative"
         width="100%"
-        bgColor="black"
         color="white"
         borderRadius="14px"
-        _hover={{ bgColor: 'black' }}
         height="56px"
         marginTop="16px"
         onClick={swapHandler}
+        bg="linear-gradient(90deg, rgba(65,65,65,1) 0%, rgba(0,0,0,1) 100%)"
+        _hover={{ opacity: '1' }}
         {...props}
       >
         Swap
@@ -45,13 +45,14 @@ function CustomButton({
         <Button
           position="relative"
           width="100%"
-          bgColor="black"
           color="white"
           borderRadius="14px"
-          _hover={{ bgColor: 'black' }}
           height="56px"
           marginTop="16px"
           onClick={swapHandler}
+          opacity="0.75"
+          bg="linear-gradient(90deg, rgba(65,65,65,1) 0%, rgba(0,0,0,1) 100%)"
+          _hover={{ opacity: '1' }}
           {...props}
         >
           {text}

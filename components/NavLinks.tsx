@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Flex, Text, chakra } from '@chakra-ui/react';
 import { links } from '../utils/navLinks';
 import Image from 'next/image';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
   styleClass?: string;
@@ -11,13 +12,20 @@ interface Props {
 export default function NavLinks({ styleClass }: Props) {
   return (
     <Flex
-      flex="1 1 0%"
-      justifyContent="space-between"
+      flex="0.5"
+      justifyContent="space-around"
       className={`page-links ${styleClass ? styleClass : ''}`}
     >
       {links.map((link) => (
-        <Flex key={link.id} alignItems="center" cursor="pointer">
-          <Image src={link.icon} alt={link.text} width={20} height={20} />
+        <Flex
+          key={link.id}
+          alignItems="center"
+          cursor="pointer"
+          color="whitesmoke"
+          opacity="0.6"
+          _hover={{ color: 'white', opacity: '1' }}
+        >
+          <FontAwesomeIcon icon={link.icon} height="18px" width="18px" />
           <Link href={`${link.url}`}>
             <Text fontSize="md" ml="6px">
               {link.text}

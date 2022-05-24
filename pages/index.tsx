@@ -8,10 +8,10 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>Near Swap</title>
+        <title>Arbitoor</title>
         <meta
-          name="Near Swap"
-          content="The best swap aggregator on Near. Built for smart traders."
+          name="Arbitoor"
+          content="The best swap aggregator on Near Protocol."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>

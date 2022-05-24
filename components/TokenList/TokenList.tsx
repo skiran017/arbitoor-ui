@@ -38,7 +38,8 @@ function TokenList({ selectToken, token }: Props) {
         borderRadius="8px"
         width="33%"
         backgroundColor="transparent"
-        _hover={{ backgroundColor: 'rgb(243 244 246/1)' }}
+        // _hover={{ backgroundColor: 'rgb(243 244 246/1)' }}
+        _hover={{ backgroundColor: '#1E4577' }}
       >
         <Flex>
           <Flex alignItems="center">
