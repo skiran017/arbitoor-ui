@@ -1,6 +1,7 @@
 import React from 'react';
-import Image from 'next/image';
-import { Flex, Box, Input, Text, chakra } from '@chakra-ui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Flex, Box, Input } from '@chakra-ui/react';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import SearchDropdown from './SearchDropdown';
 
 function Searchbar() {
@@ -17,7 +18,6 @@ function Searchbar() {
             onBlur={toggleDropDown}
             w="100%"
             borderRadius="14px"
-            // bgColor="white"
             bgColor="#26262C"
             padding="6px 20px"
             marginTop="8px"
@@ -27,11 +27,11 @@ function Searchbar() {
           >
             <Flex alignItems="center">
               <Flex alignItems="center">
-                <Image
-                  src="/assets/icons/search.svg"
-                  width={18}
-                  height={18}
-                  alt="search"
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  color="whitesmoke"
+                  height="18px"
+                  width="18px"
                 />
               </Flex>
               <Input

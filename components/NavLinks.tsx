@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import { Flex, Text, chakra } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { links } from '../utils/navLinks';
-import Image from 'next/image';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
