@@ -836,18 +836,18 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-6.10.0.tgz#c012c1ecc1a0e53d50e6af381618dca5268461c1"
   integrity sha512-lLseUPEhSFUXYTKj6q7s2O3s2vW2ebgA11vMAlKodXGf5AFw4zUoEbTz9CoFOC9jS6xY4Qr8BmRnxP/odT4Uuw==
 
-"@near-wallet-selector/core@.\\lib-dist\\near-wallet-selector-core-v3.1.0.tgz", "@near-wallet-selector/core@3.1.0":
+"@near-wallet-selector/core@3.1.0", "@near-wallet-selector/core@file:lib-dist/near-wallet-selector-core-v3.1.0.tgz":
   version "3.1.0"
-  resolved ".\\lib-dist\\near-wallet-selector-core-v3.1.0.tgz#ce796579ca288a525d81fd648bfe0ffda4928c19"
+  resolved "file:lib-dist/near-wallet-selector-core-v3.1.0.tgz#ce796579ca288a525d81fd648bfe0ffda4928c19"
   dependencies:
     bn.js "^5.2.0"
     near-api-js "0.44.2"
     react "^17.0.2"
     react-dom "^17.0.2"
 
-"@near-wallet-selector/ledger@.\\lib-dist\\near-wallet-selector-ledger-v3.1.0.tgz":
+"@near-wallet-selector/ledger@file:lib-dist/near-wallet-selector-ledger-v3.1.0.tgz":
   version "3.1.0"
-  resolved ".\\lib-dist\\near-wallet-selector-ledger-v3.1.0.tgz#e646d4958ca5578b5e80e55e5e664067f3267676"
+  resolved "file:lib-dist/near-wallet-selector-ledger-v3.1.0.tgz#e646d4958ca5578b5e80e55e5e664067f3267676"
   dependencies:
     "@ledgerhq/hw-transport" "^6.20.0"
     "@ledgerhq/hw-transport-webhid" "^6.20.0"
@@ -859,16 +859,16 @@
     react "^17.0.2"
     react-dom "^17.0.2"
 
-"@near-wallet-selector/math-wallet@.\\lib-dist\\near-wallet-selector-math-wallet-v3.1.0.tgz":
+"@near-wallet-selector/math-wallet@file:lib-dist/near-wallet-selector-math-wallet-v3.1.0.tgz":
   version "3.1.0"
-  resolved ".\\lib-dist\\near-wallet-selector-math-wallet-v3.1.0.tgz#38077aae1d2e9d06a37f4b90722c41093dd21758"
+  resolved "file:lib-dist/near-wallet-selector-math-wallet-v3.1.0.tgz#38077aae1d2e9d06a37f4b90722c41093dd21758"
   dependencies:
     is-mobile "^3.0.0"
     near-api-js "0.44.2"
 
-"@near-wallet-selector/near-wallet@.\\lib-dist\\near-wallet-selector-near-wallet-v3.1.0.tgz":
+"@near-wallet-selector/near-wallet@file:lib-dist/near-wallet-selector-near-wallet-v3.1.0.tgz":
   version "3.1.0"
-  resolved ".\\lib-dist\\near-wallet-selector-near-wallet-v3.1.0.tgz#abdc1a2cf05c644dd22d421c9923e2e1aea7f11f"
+  resolved "file:lib-dist/near-wallet-selector-near-wallet-v3.1.0.tgz#abdc1a2cf05c644dd22d421c9923e2e1aea7f11f"
   dependencies:
     "@near-wallet-selector/core" "3.1.0"
     bn.js "^5.2.0"
@@ -876,9 +876,9 @@
     react "^17.0.2"
     react-dom "^17.0.2"
 
-"@near-wallet-selector/sender@.\\lib-dist\\near-wallet-selector-sender-v3.1.0.tgz":
+"@near-wallet-selector/sender@file:lib-dist/near-wallet-selector-sender-v3.1.0.tgz":
   version "3.1.0"
-  resolved ".\\lib-dist\\near-wallet-selector-sender-v3.1.0.tgz#6cbe9c4d1d28d19575279ebbd56b6dae1432f559"
+  resolved "file:lib-dist/near-wallet-selector-sender-v3.1.0.tgz#6cbe9c4d1d28d19575279ebbd56b6dae1432f559"
   dependencies:
     is-mobile "^3.0.0"
     near-api-js "0.44.2"
