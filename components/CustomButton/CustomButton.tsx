@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Box, ButtonProps } from '@chakra-ui/react';
 
 interface Props extends ButtonProps {
-  text: string;
+  text: string | null;
   swapHandler?: () => void;
   btnType?: string;
   isLoading?: boolean;
