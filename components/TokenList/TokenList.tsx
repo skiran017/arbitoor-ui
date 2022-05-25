@@ -14,7 +14,8 @@ import {
   Box,
   chakra,
 } from '@chakra-ui/react';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { tokenList } from '../../utils/tokenList';
 import { Token } from '../../types';
 
@@ -45,7 +46,7 @@ function TokenList({ selectToken, token }: Props) {
           <Flex alignItems="center">
             <Image
               alt="ticker symbol"
-              src="/assets/tickerLogos/sol.webp"
+              src="/assets/tickerLogos/usn.png"
               width={22}
               height={5}
               borderRadius="12px"
@@ -69,25 +70,34 @@ function TokenList({ selectToken, token }: Props) {
         onClose={onClose}
         isCentered
       >
-        <ModalOverlay background="#fff" />
+        <ModalOverlay
+          css={{
+            background: '#5d5d6db1',
+            // boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+            backdropFilter: 'blur(7.8px)',
+            '&::-webkit-backdrop-filter': 'blur(7.8px)',
+          }}
+        />
         <ModalContent
           maxHeight="90vh"
           height="100%"
           overflow="hidden"
           width="100%"
           position="fixed"
+          background="#26262C"
         >
           <ModalHeader>
             <Flex alignItems="center">
               <Flex alignItems="center">
-                <Image
-                  src="/assets/icons/search.svg"
-                  width={18}
-                  height={18}
-                  alt="search"
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  color="whitesmoke"
+                  height="18px"
+                  width="18px"
                 />
               </Flex>
               <Input
+                color="whitesmoke"
                 placeholder="Search by token or paste address"
                 border="none"
                 _focus={{ boxShadow: 'none' }}
@@ -98,15 +108,15 @@ function TokenList({ selectToken, token }: Props) {
 
           <ModalBody pb={6} borderTop="1px solid #eee">
             <Box
-              position="fixed"
-              inset="72px auto auto 10px"
+              position="absolute"
+              top="110px"
+              left="0"
               maxW="448px"
-              transform="translate3d(541.935px, 78.2258px, 0px)"
               w="100%"
               zIndex="20"
             >
               <Flex
-                bgColor="white"
+                bgColor="#26262C"
                 borderRadius="14px"
                 boxShadow={
                   '0 0 #0000,0 0 #0000,0 0 #0000,0 0 #0000,0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)'
@@ -116,12 +126,32 @@ function TokenList({ selectToken, token }: Props) {
                 width="100%"
                 direction="column"
               >
-                <Box maxH="75vh" color="black" overflowY="scroll">
+                <Box
+                  maxH="75vh"
+                  color="black"
+                  overflowY="scroll"
+                  css={{
+                    '&::-webkit-scrollbar': {
+                      width: '6px',
+                      backgroundColor: '#F5F5F5',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      width: '10px',
+                      borderRadius: '10px',
+                      backgroundColor: '#F5F5F5',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      background: 'gray',
+                      borderRadius: '10px',
+                    },
+                  }}
+                >
                   {tokenList.map((token: Token) => {
                     return (
                       <chakra.a key={token.id} onClick={onClose}>
                         <Box
-                          _hover={{ bgColor: '#eee' }}
+                          color="whitesmoke"
+                          _hover={{ bgColor: '#1E4577' }}
                           padding="14px 48px"
                           onClick={() => {
                             selectToken(token);

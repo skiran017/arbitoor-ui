@@ -35,7 +35,7 @@ function Searchbar() {
                 />
               </Flex>
               <Input
-                placeholder="You can try 10 NEAR to USDC"
+                placeholder="You can try 10 wNEAR to USDT"
                 border="none"
                 _focus={{ boxShadow: 'none' }}
                 color="whitesmoke"

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Flex, Box, Input } from '@chakra-ui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowsRotate, faSliders } from '@fortawesome/free-solid-svg-icons';
 import TokenList from '../TokenList/TokenList';
 import ToggleToken from '../ToggleToken/ToggleToken';
 import SwapSide from './SwapSide';
@@ -40,9 +42,29 @@ function SwapContent() {
         // bgColor="whitesmoke"
         bgColor="#26262C"
         borderRadius="14px"
-        padding="32px 22px"
+        padding="22px 22px 32px"
         color="whitesmoke"
       >
+        <Flex marginBottom="16px" justifyContent="flex-end" alignItems="center">
+          <Box paddingRight="18px">
+            <FontAwesomeIcon
+              icon={faArrowsRotate}
+              color="whitesmoke"
+              height="18px"
+              width="18px"
+              cursor="pointer"
+            />
+          </Box>
+          <Box>
+            <FontAwesomeIcon
+              icon={faSliders}
+              color="whitesmoke"
+              height="18px"
+              width="18px"
+              cursor="pointer"
+            />
+          </Box>
+        </Flex>
         <SwapSide swapSide="pay" balanceAmount={10} />
         <Box
           paddingX="14px"
