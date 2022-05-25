@@ -1,15 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import * as nearAPI from 'near-api-js';
 import { useRouter } from 'next/router'
+import { AccountView, CodeResult } from 'near-api-js/lib/providers/provider';
+import { providers, utils } from 'near-api-js';
+import { Account } from '../types';
 import { useGlobalStore } from '../utils/globalStore';
+import { useWalletSelector } from './WalletSelectorContext';
 
 
 function useConnection() {
-  const router = useRouter()
+  
+  const { selector, accounts, accountId, setAccountId } = useWalletSelector();
 
-  const [storageData, setStorageData] = useState<any>(null);
+  const [account, setAccount] = useState<Account | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const [isLoading, isSignedIn, wallet, setIsLoading, setIsSignedIn, setWallet] = useGlobalStore((state) => [state.connectionState.isLoading,
+  const [isLoading, isSignedIn, setIsLoading, setIsSignedIn] = useGlobalStore((state) => [state.connectionState.isLoading,
   state.connectionState.isSignedIn,
   state.connectionState.wallet,
   state.actions.connection.setIsLoading,
@@ -17,67 +23,60 @@ function useConnection() {
   state.actions.connection.setWallet,
   ]);
 
+  const getAccount = useCallback(async (): Promise<Account | null> => {
+    if (!accountId) {
+      return null;
+    }
+
+    const { nodeUrl } = selector.network;
+    const provider = new providers.JsonRpcProvider({ url: nodeUrl });
+
+    return provider
+      .query<AccountView>({
+        request_type: 'view_account',
+        finality: 'final',
+        account_id: accountId,
+      })
+      .then((data) => ({
+        ...data,
+        account_id: accountId,
+      }));
+  }, [accountId, selector.network]);
+
   useEffect(() => {
-
-    if (wallet?.isSignedIn()) {
-      if (typeof window !== 'undefined') {
-        setStorageData(JSON.parse(window.localStorage.getItem("null_wallet_auth_key")!))
-      }
+    if (!accountId) {
+      return setAccount(null);
     }
-  }, [wallet])
 
-  useEffect(() => {
-    if (storageData?.allKeys[0]) {
-      setIsSignedIn(true)
-    }
-  }, [storageData])
+    setLoading(true);
 
+    getAccount().then((nextAccount) => {
+      setAccount(nextAccount);
+      setLoading(false);
+      setIsSignedIn(true);
 
-
-
-
-  const load = async () => {
-    if (typeof window !== 'undefined') {
-      const { connect, keyStores, WalletConnection } = nearAPI;
-      const keyStore = new keyStores.BrowserLocalStorageKeyStore();
-      const config = {
-        networkId: 'testnet',
-        keyStore,
-        nodeUrl: 'https://rpc.testnet.near.org',
-        walletUrl: 'https://wallet.testnet.near.org',
-        helperUrl: 'https://helper.testnet.near.org',
-        explorerUrl: 'https://explorer.testnet.near.org',
-        headers: {},
-        contractName: 'skiran017.testnet'
-      };
-
-      setIsLoading(true);
-
-      // connect to NEAR
-      const near = await connect(config);
-
-      // create wallet connection
-      const data = new WalletConnection(near, null);
-      setWallet(data);
-      setIsLoading(false);
-    }
-  };
+    });
+  }, [accountId, getAccount]);
 
   const handleSignIn = () => {
-    wallet.requestSignIn();
-    setIsSignedIn(true);
+    // wallet.requestSignIn();
+    selector.show();
   };
-
+  console.log(accountId)
   function handleSignOut() {
-    wallet?.signOut();
-    localStorage.clear();
-    setStorageData(null)
-    setIsSignedIn(false)
-    router.push('/')
+    // wallet?.signOut();
+    // localStorage.clear();
+    // setStorageData(null)
+    selector.signOut().catch((err) => {
+      console.log('Failed to sign out');
+      console.error(err);
+    });
+    // setIsSignedIn(false)
+    // router.push('/')
   };
 
   return {
-    load,
+    // load,
     isLoading,
     handleSignIn,
     handleSignOut,

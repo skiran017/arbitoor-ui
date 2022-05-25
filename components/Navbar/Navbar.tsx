@@ -1,15 +1,25 @@
 import React from 'react';
 import Image from 'next/image';
 import { Text } from '@chakra-ui/react';
-import { Button } from '@chakra-ui/react';
-import { Flex, chakra } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import NavLinks from '../NavLinks';
 import CustomButton from '../CustomButton/CustomButton';
-import useConnection from '../../hooks/useConnection';
 import Link from 'next/link';
+import { useWalletSelector } from '../../hooks/WalletSelectorContext';
 
 function Navbar() {
-  const { handleSignOut, isSignedIn, handleSignIn } = useConnection();
+  const { selector } = useWalletSelector();
+
+  const handleSignIn = () => {
+    selector.show();
+  };
+
+  function handleSignOut() {
+    selector.signOut().catch((err) => {
+      console.log('Failed to sign out');
+      console.error(err);
+    });
+  }
   return (
     <Flex
       justifyContent="space-between"
@@ -49,8 +59,8 @@ function Navbar() {
           width="156px"
           height="48px"
           opacity="0.75"
-          onClick={isSignedIn ? handleSignOut : handleSignIn}
-          text={isSignedIn ? 'Signout' : 'Connect Wallet'}
+          onClick={selector.isSignedIn() ? handleSignOut : handleSignIn}
+          text={selector.isSignedIn() ? 'Signout' : 'Connect Wallet'}
         />
       </Flex>
     </Flex>
