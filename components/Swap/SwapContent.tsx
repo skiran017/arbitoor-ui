@@ -8,19 +8,18 @@ import SwapSide from './SwapSide';
 import BestPrice from '../BestPrice/BestPrice';
 import CustomButton from '../CustomButton/CustomButton';
 import { tokenList } from '../../utils/tokenList';
-import useConnection from '../../hooks/useConnection';
-
 import { Token } from '../../types';
+import { useWalletSelector } from '../../hooks/WalletSelectorContext';
 
 function SwapContent() {
   const [payToken, setPayToken] = useState<Token>(tokenList[0]);
   const [receiveToken, setReceiveToken] = useState<Token>(tokenList[1]);
 
-  const { handleSignIn, isLoading, isSignedIn, load } = useConnection();
+  const { selector } = useWalletSelector();
 
-  useEffect(() => {
-    load();
-  }, []);
+  const handleSignIn = () => {
+    selector.show();
+  };
 
   function selectPayToken(token: Token) {
     setPayToken(token);
@@ -110,9 +109,8 @@ function SwapContent() {
       <CustomButton
         btnType="swap"
         text="Connect Wallet"
-        isSignedIn={isSignedIn}
-        isLoading={isLoading}
-        swapHandler={isSignedIn ? handleSwap : handleSignIn}
+        isSignedIn={selector.isSignedIn()}
+        swapHandler={selector.isSignedIn() ? handleSwap : handleSignIn}
       />
     </>
   );
