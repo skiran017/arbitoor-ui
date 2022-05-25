@@ -6,7 +6,7 @@ interface Props extends ButtonProps {
   swapHandler?: () => void;
   btnType?: string;
   isLoading?: boolean;
-  isSignedIn?: () => void;
+  isSignedIn?: any;
 }
 
 function CustomButton({
