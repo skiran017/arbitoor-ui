@@ -3,39 +3,39 @@ export const topTradedPairs = [
     id: '1',
     icon1: '',
     icon2: '',
-    ticker: 'SOL - USDC',
-    description: 'Wrapped SOL - USD Coin',
+    ticker: 'wNEAR - USDT',
+    description: 'Wrapped NEAR - USDT',
     url: '/'
   }, {
     id: '2',
     icon1: '',
     icon2: '',
-    ticker: 'USDC - USDT',
-    description: 'USD Coin - USDT',
+    ticker: 'USN - wNEAR',
+    description: 'USN - Wrapped NEAR',
     url: '/'
 
   }, {
     id: '3',
     icon1: '',
     icon2: '',
-    ticker: 'GMT - USDC',
-    description: 'GMT - USD Coin',
+    ticker: 'DAI - USN',
+    description: 'DAI Stable Coin - USN',
     url: '/'
 
   }, {
     id: '4',
     icon1: '',
     icon2: '',
-    ticker: 'SOL - USDT',
-    description: 'Wrapped SOL - USDT',
+    ticker: 'WBTC - wNEAR',
+    description: 'Wrapped Bticoin - Wrapped NEAR',
     url: '/'
 
   }, {
     id: '5',
     icon1: '',
     icon2: '',
-    ticker: 'USDC - UXD',
-    description: 'USD Coin - UXD Stablecoin',
+    ticker: 'USDC - USDT',
+    description: 'USD Coin - USDT',
     url: '/'
 
   }]
