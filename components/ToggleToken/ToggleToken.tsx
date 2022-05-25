@@ -7,8 +7,8 @@ interface Props {
 
 function ToggleToken({ handleTokenSwitch }: Props) {
   return (
-    <Box marginTop="48px">
-      <Flex justifyContent="center" onClick={handleTokenSwitch}>
+    <Box marginTop="36px">
+      <Flex justifyContent="center">
         <Flex
           color="black"
           backgroundColor="rgb(235 239 241/1)"
@@ -18,6 +18,7 @@ function ToggleToken({ handleTokenSwitch }: Props) {
           cursor="pointer"
           width="32px"
           height="32px"
+          onClick={handleTokenSwitch}
         >
           <Image
             src="/assets/icons/trade.svg"

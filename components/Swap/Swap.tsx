@@ -13,7 +13,7 @@ function Swap() {
         width="100%"
         marginTop="40px"
       >
-        <TitleContent />
+        {/* <TitleContent /> */}
         <SwapBody />
       </Flex>
     </Flex>

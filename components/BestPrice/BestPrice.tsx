@@ -1,6 +1,8 @@
 import React from 'react';
 import { Flex, Text, chakra, Box, Input } from '@chakra-ui/react';
 import Image from 'next/image';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 function BestPrice() {
   return (
@@ -15,7 +17,14 @@ function BestPrice() {
             width="99%"
             lineHeight="1.25"
             borderRadius="8px"
-            backgroundImage="linear-gradient(96.8deg,#faa43a 4.71%,#71e5ed 87.84%)"
+            // backgroundImage="linear-gradient(96.8deg,#faa43a 4.71%,#71e5ed 87.84%)"
+            border="solid 3px transparent"
+            style={{
+              backgroundImage:
+                'linear-gradient(#101010, #101010), radial-gradient(circle at top left, #ffdd00,#20ff3a)',
+              backgroundOrigin: 'border-box',
+              backgroundClip: 'content-box, border-box',
+            }}
           >
             <Flex
               fontSize="13px"
@@ -24,12 +33,12 @@ function BestPrice() {
               alignItems="center"
               borderRadius="8px"
             >
-              <Flex width="auto" alignItems="center" direction="column">
+              <Flex direction="column">
                 <Flex alignItems="center" fontWeight="semibold">
-                  <chakra.span>Mercurial x Lifinity</chakra.span>
+                  <chakra.span>Ref.finance</chakra.span>
                 </Flex>
-                <Flex marginLeft="4px">
-                  <Flex marginLeft="4px" color="black" alignItems="center">
+                <Flex marginLeft="4px" color="whitesmoke">
+                  {/* <Flex marginLeft="4px" alignItems="center">
                     <Text fontSize="11px" fontWeight="semibold">
                       <chakra.span>USDT</chakra.span>
                     </Text>
@@ -41,23 +50,23 @@ function BestPrice() {
                         width={12}
                       />
                     </Flex>
-                  </Flex>
-                  <Flex marginLeft="4px" color="black" alignItems="center">
+                  </Flex> */}
+                  <Flex marginLeft="4px" alignItems="center">
                     <Text fontSize="11px" fontWeight="semibold">
                       <chakra.span>USDC</chakra.span>
                     </Text>
                     <Flex alignItems="center" marginLeft="4px">
-                      <Image
-                        src="/assets/icons/arrowRight.svg"
-                        alt="arrow right"
-                        height={12}
-                        width={12}
+                      <FontAwesomeIcon
+                        icon={faArrowRight}
+                        color="whitesmoke"
+                        height="10px"
+                        width="12px"
                       />
                     </Flex>
                   </Flex>
-                  <Flex marginLeft="4px" color="black" alignItems="center">
+                  <Flex marginLeft="4px" alignItems="center">
                     <Text fontSize="11px" fontWeight="semibold">
-                      <chakra.span>SOL</chakra.span>
+                      <chakra.span>wNEAR</chakra.span>
                     </Text>
                   </Flex>
                 </Flex>
@@ -75,7 +84,9 @@ function BestPrice() {
             width="99%"
             lineHeight="1.25"
             borderRadius="8px"
-            backgroundColor="#eee"
+            // backgroundColor="#eee"
+            backgroundColor="#101010"
+            marginTop="8px"
           >
             <Flex
               fontSize="13px"
@@ -84,40 +95,40 @@ function BestPrice() {
               alignItems="center"
               borderRadius="8px"
             >
-              <Flex width="auto" alignItems="center" direction="column">
+              <Flex direction="column">
                 <Flex alignItems="center" fontWeight="semibold">
-                  <chakra.span>Mercurial x Lifinity</chakra.span>
+                  <chakra.span>Jumbo</chakra.span>
                 </Flex>
                 <Flex marginLeft="4px">
-                  <Flex marginLeft="4px" color="black" alignItems="center">
+                  <Flex marginLeft="4px" alignItems="center">
                     <Text fontSize="11px" fontWeight="semibold">
                       <chakra.span>USDT</chakra.span>
                     </Text>
                     <Flex alignItems="center" marginLeft="4px">
-                      <Image
-                        src="/assets/icons/arrowRight.svg"
-                        alt="arrow right"
-                        height={12}
-                        width={12}
+                      <FontAwesomeIcon
+                        icon={faArrowRight}
+                        color="whitesmoke"
+                        height="10px"
+                        width="12px"
                       />
                     </Flex>
                   </Flex>
-                  <Flex marginLeft="4px" color="black" alignItems="center">
+                  <Flex marginLeft="4px" alignItems="center">
                     <Text fontSize="11px" fontWeight="semibold">
                       <chakra.span>USDC</chakra.span>
                     </Text>
                     <Flex alignItems="center" marginLeft="4px">
-                      <Image
-                        src="/assets/icons/arrowRight.svg"
-                        alt="arrow right"
-                        height={12}
-                        width={12}
+                      <FontAwesomeIcon
+                        icon={faArrowRight}
+                        color="whitesmoke"
+                        height="10px"
+                        width="12px"
                       />
                     </Flex>
                   </Flex>
-                  <Flex marginLeft="4px" color="black" alignItems="center">
+                  <Flex marginLeft="4px" alignItems="center">
                     <Text fontSize="11px" fontWeight="semibold">
-                      <chakra.span>SOL</chakra.span>
+                      <chakra.span>wNEAR</chakra.span>
                     </Text>
                   </Flex>
                 </Flex>

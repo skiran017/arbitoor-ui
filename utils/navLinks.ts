@@ -1,29 +1,24 @@
+import { faChartLine, faFile, faShuffle } from '@fortawesome/free-solid-svg-icons';
+
 export const links = [
   {
     id: 1,
     text: 'Trade',
     url: '/',
-    icon: '/assets/icons/trade.svg'
-  },
-  {
-    id: 2,
-    text: 'Infra',
-    url: '/',
-    icon: '/assets/icons/infra.svg'
-
+    icon: faShuffle
   },
   {
     id: 3,
     text: 'Docs',
-    url: '/',
-    icon: '/assets/icons/docs.svg'
+    url: '/docs',
+    icon: faFile
 
   },
   {
     id: 4,
     text: 'Stats',
-    url: '/',
-    icon: '/assets/icons/stats.svg'
+    url: '/stats',
+    icon: faChartLine
 
   },
 ];

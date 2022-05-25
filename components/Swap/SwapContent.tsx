@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Flex, Box, Input } from '@chakra-ui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowsRotate, faSliders } from '@fortawesome/free-solid-svg-icons';
 import TokenList from '../TokenList/TokenList';
 import ToggleToken from '../ToggleToken/ToggleToken';
 import SwapSide from './SwapSide';
@@ -37,14 +39,37 @@ function SwapContent() {
     <>
       <Flex
         direction="column"
-        bgColor="white"
+        // bgColor="whitesmoke"
+        bgColor="#26262C"
         borderRadius="14px"
-        padding="32px 22px"
+        padding="22px 22px 32px"
+        color="whitesmoke"
       >
+        <Flex marginBottom="16px" justifyContent="flex-end" alignItems="center">
+          <Box paddingRight="18px">
+            <FontAwesomeIcon
+              icon={faArrowsRotate}
+              color="whitesmoke"
+              height="18px"
+              width="18px"
+              cursor="pointer"
+            />
+          </Box>
+          <Box>
+            <FontAwesomeIcon
+              icon={faSliders}
+              color="whitesmoke"
+              height="18px"
+              width="18px"
+              cursor="pointer"
+            />
+          </Box>
+        </Flex>
         <SwapSide swapSide="pay" balanceAmount={10} />
         <Box
           paddingX="14px"
-          backgroundColor="rgb(235 239 241/1)"
+          backgroundColor="#101010"
+          // backgroundColor="white"
           height="64px"
           borderRadius="14px"
         >
@@ -68,16 +93,18 @@ function SwapContent() {
         </Box>
 
         <ToggleToken handleTokenSwitch={tokenSwitchHandler} />
+        <Box>
+          <SwapSide swapSide="receive" balanceAmount={1} />
 
-        <SwapSide swapSide="receive" balanceAmount={1} />
+          <TokenList selectToken={selectReceiveToken} token={receiveToken} />
 
-        <TokenList selectToken={selectReceiveToken} token={receiveToken} />
-
-        <BestPrice />
+          <BestPrice />
+        </Box>
       </Flex>
+
       <div
         style={{
-          marginBottom: '48px',
+          marginBottom: '18px',
         }}
       />
       <CustomButton
