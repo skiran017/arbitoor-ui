@@ -15,7 +15,7 @@ function SearchDropdown() {
       position="absolute"
       top="64px"
       left="0"
-      maxW="450px"
+      maxW="448px"
       w="100%"
       zIndex="20"
     >
