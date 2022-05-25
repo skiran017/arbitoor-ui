@@ -6,21 +6,17 @@ interface Props extends ButtonProps {
   swapHandler?: () => void;
   btnType?: string;
   isLoading?: boolean;
-  isSignedIn?: boolean;
+  isSignedIn?: any;
 }
 
 function CustomButton({
   text,
   swapHandler,
   btnType,
-  isLoading,
+
   isSignedIn,
   ...props
 }: Props) {
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (isSignedIn && btnType === 'swap') {
     return (
       <Button
