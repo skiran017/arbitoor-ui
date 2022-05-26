@@ -8,4 +8,5 @@ export type Token = {
   icon: string;
   ticker: string;
   description: string;
+  decimals: number;
 }

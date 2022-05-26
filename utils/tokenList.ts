@@ -1,62 +1,23 @@
 export const tokenList = [
   {
-    id: '1',
-    icon: '',
-    ticker: 'USN',
-    description: 'Unified Stable NEAR',
-  },
-  {
-    id: '2',
+    id: 'wrap.near',
     icon: '',
     ticker: 'wNEAR',
     description: 'Wrapper NEAR',
+    decimals: 24,
   },
   {
-    id: '3',
-    icon: '',
-    ticker: 'SKYWARD',
-    description: 'Skyward',
-  },
-  {
-    id: '4',
-    icon: '',
-    ticker: 'OCT',
-    description: 'Octopus Network',
-  },
-  {
-    id: '5',
-    icon: '',
-    ticker: 'STNEAR',
-    description: 'Staked NEAR',
-  },
-  {
-    id: '6',
+    id: 'dac17f958d2ee523a2206206994597c13d831ec7.factory.bridge.near',
     icon: '',
     ticker: 'USDT',
     description: 'USDT',
+    decimals: 6,
   },
   {
-    id: '6',
+    id: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near',
     icon: '',
     ticker: 'USDC',
     description: 'USD Coin',
+    decimals: 6,
   },
-  {
-    id: '7',
-    icon: '',
-    ticker: 'ETH',
-    description: 'Ethereum',
-  },
-  {
-    id: '8',
-    icon: '',
-    ticker: 'DAI',
-    description: 'DAI',
-  },
-  {
-    id: '9',
-    icon: '',
-    ticker: 'WBTC',
-    description: 'Wrapped BTC',
-  }
 ]
