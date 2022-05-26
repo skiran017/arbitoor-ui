@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Flex, Box, Input } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { providers } from 'near-api-js';
 import { faArrowsRotate, faSliders } from '@fortawesome/free-solid-svg-icons';
 import TokenList from '../TokenList/TokenList';
 import ToggleToken from '../ToggleToken/ToggleToken';
@@ -10,12 +11,105 @@ import CustomButton from '../CustomButton/CustomButton';
 import { tokenList } from '../../utils/tokenList';
 import { Token } from '../../types';
 import { useWalletSelector } from '../../hooks/WalletSelectorContext';
+import { Comet, EstimateSwapView, getExpectedOutputFromActions } from '@comethq/comet-sdk';
+import BigNumber from 'bignumber.js';
+
+interface SwapRoute {
+  output: string,
+  actions: EstimateSwapView[],
+}
+
+/**
+ * Returns a string representation of swap path
+ *
+ * Example: USDC -> USDT, USDC -> WNEAR, USDT
+ * @param actions
+ * @returns
+ */
+function getRoutePath(actions: EstimateSwapView[]) {
+  const routes: string[] = []
+
+  for (let i = 0; i < actions.length; i++) {
+    const action = actions[i]
+    const route = action.nodeRoute!.map(token => {
+      const saved = tokenList.find(savedToken => {
+        return savedToken.id == token
+      })
+
+      return saved ? saved.ticker : token.slice(0, 10)
+    }).join(' -> ')
+    if (i === 0 || routes[routes.length - 1] !== route) {
+      routes.push(route)
+    }
+  }
+  return routes.join(', ')
+}
 
 function SwapContent() {
   const [payToken, setPayToken] = useState<Token>(tokenList[0]);
   const [receiveToken, setReceiveToken] = useState<Token>(tokenList[1]);
+  const [inputAmount, setInputAmount] = useState<string>();
 
+  // TODO Remove placeholder routes on the UI. Display generated path once 'routes' is set
+  const [routes, setRoutes] = useState<SwapRoute[]>();
   const { selector } = useWalletSelector();
+
+  useEffect(() => {
+    async function findRoutes() {
+      if (inputAmount && payToken && receiveToken) {
+        const inputAmountAdjusted = new BigNumber(10).pow(payToken.decimals).multipliedBy(new BigNumber(inputAmount))
+
+        try {
+          const provider = new providers.JsonRpcProvider({ url: selector.network.nodeUrl });
+          const comet = new Comet({
+            provider,
+            user: 'test.near',
+            routeCacheDuration: 1000
+          })
+
+          const actions = await comet.computeRoutes({
+            inputToken: payToken.id,
+            outputToken: receiveToken.id,
+            inputAmount: inputAmountAdjusted.toString(),
+          })
+
+          // Use this to display swap paths on the UI
+          const refPath = getRoutePath(actions.ref)
+          console.log('ref path', refPath)
+
+          const [refOutput, jumboOutput] = await Promise.all([
+            getExpectedOutputFromActions(
+              actions.ref,
+              receiveToken.id,
+              5
+            ),
+            getExpectedOutputFromActions(
+              actions.jumbo,
+              receiveToken.id,
+              5
+            )
+          ])
+          if (refOutput.gte(jumboOutput)) {
+            setRoutes([
+              {
+                output: refOutput.toString(),
+                actions: actions.ref,
+              },
+              {
+                output: jumboOutput.toString(),
+                actions: actions.jumbo,
+              }
+            ])
+          }
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    }
+
+    findRoutes()
+  }, [inputAmount])
+
 
   const handleSignIn = () => {
     selector.show();
@@ -32,7 +126,7 @@ function SwapContent() {
     setReceiveToken(payToken);
   }
   function handleSwap() {
-    alert('swap successful');
+    console.log('tokens', payToken, receiveToken)
   }
   return (
     <>
@@ -86,7 +180,8 @@ function SwapContent() {
               textAlign="right"
               placeholder="0.00"
               type="number"
-              min="1"
+              value={inputAmount}
+              onChange={(event) => { setInputAmount(event.target.value) }}
             />
           </Flex>
         </Box>
