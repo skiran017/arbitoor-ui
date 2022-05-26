@@ -5,7 +5,7 @@ function Footer() {
   return (
     <Flex
       flex=" 1"
-      padding="1rem 0"
+      padding={['1rem 2rem', '1rem 2rem', '1rem 0', '1rem 0']}
       borderTop="1px solid #bababa"
       justifyContent="center"
       alignItems="center"
