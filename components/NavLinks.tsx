@@ -15,6 +15,7 @@ export default function NavLinks({ styleClass }: Props) {
       flex="0.5"
       justifyContent="space-around"
       className={`page-links ${styleClass ? styleClass : ''}`}
+      display={['none', 'none', 'flex', 'flex']}
     >
       {links.map((link) => (
         <Flex
