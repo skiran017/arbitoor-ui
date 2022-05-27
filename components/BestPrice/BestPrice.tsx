@@ -3,8 +3,18 @@ import { Flex, Text, chakra, Box, Input } from '@chakra-ui/react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { EstimateSwapView } from '@comethq/comet-sdk';
 
-function BestPrice() {
+type RouteItem = {
+  output: string;
+  actions: EstimateSwapView[];
+};
+interface Routes {
+  routes: Array<RouteItem> | undefined;
+  path: string[] | undefined;
+}
+
+function BestPrice({ routes, path }: Routes) {
   return (
     <Box maxHeight="163px" height="100%">
       <Box position="relative" height="163px" w="100%">
@@ -37,38 +47,29 @@ function BestPrice() {
                 <Flex alignItems="center" fontWeight="semibold">
                   <chakra.span>Ref.finance</chakra.span>
                 </Flex>
-                <Flex marginLeft="4px" color="whitesmoke">
-                  {/* <Flex marginLeft="4px" alignItems="center">
-                    <Text fontSize="11px" fontWeight="semibold">
-                      <chakra.span>USDT</chakra.span>
-                    </Text>
-                    <Flex alignItems="center" marginLeft="4px">
-                      <Image
-                        src="/assets/icons/arrowRight.svg"
-                        alt="arrow right"
-                        height={12}
-                        width={12}
-                      />
-                    </Flex>
-                  </Flex> */}
-                  <Flex marginLeft="4px" alignItems="center">
-                    <Text fontSize="11px" fontWeight="semibold">
-                      <chakra.span>USDC</chakra.span>
-                    </Text>
-                    <Flex alignItems="center" marginLeft="4px">
-                      <FontAwesomeIcon
-                        icon={faArrowRight}
-                        color="whitesmoke"
-                        height="10px"
-                        width="12px"
-                      />
-                    </Flex>
-                  </Flex>
-                  <Flex marginLeft="4px" alignItems="center">
-                    <Text fontSize="11px" fontWeight="semibold">
-                      <chakra.span>wNEAR</chakra.span>
-                    </Text>
-                  </Flex>
+                <Flex direction="row">
+                  {path &&
+                    path.map((ticker: any, idx: number, arr: any) => {
+                      return (
+                        <>
+                          <Flex marginLeft="4px" alignItems="center">
+                            <Text fontSize="11px" fontWeight="semibold">
+                              <chakra.span>{ticker}</chakra.span>
+                            </Text>
+                            {arr.length - 1 > idx ? (
+                              <Flex alignItems="center" marginLeft="4px">
+                                <FontAwesomeIcon
+                                  icon={faArrowRight}
+                                  color="whitesmoke"
+                                  height="10px"
+                                  width="12px"
+                                />
+                              </Flex>
+                            ) : null}
+                          </Flex>
+                        </>
+                      );
+                    })}
                 </Flex>
               </Flex>
               <Box fontWeight="semibold" textAlign="right">
@@ -97,40 +98,31 @@ function BestPrice() {
             >
               <Flex direction="column">
                 <Flex alignItems="center" fontWeight="semibold">
-                  <chakra.span>Jumbo</chakra.span>
+                  <chakra.span>Jumbo.finance</chakra.span>
                 </Flex>
-                <Flex marginLeft="4px">
-                  <Flex marginLeft="4px" alignItems="center">
-                    <Text fontSize="11px" fontWeight="semibold">
-                      <chakra.span>USDT</chakra.span>
-                    </Text>
-                    <Flex alignItems="center" marginLeft="4px">
-                      <FontAwesomeIcon
-                        icon={faArrowRight}
-                        color="whitesmoke"
-                        height="10px"
-                        width="12px"
-                      />
-                    </Flex>
-                  </Flex>
-                  <Flex marginLeft="4px" alignItems="center">
-                    <Text fontSize="11px" fontWeight="semibold">
-                      <chakra.span>USDC</chakra.span>
-                    </Text>
-                    <Flex alignItems="center" marginLeft="4px">
-                      <FontAwesomeIcon
-                        icon={faArrowRight}
-                        color="whitesmoke"
-                        height="10px"
-                        width="12px"
-                      />
-                    </Flex>
-                  </Flex>
-                  <Flex marginLeft="4px" alignItems="center">
-                    <Text fontSize="11px" fontWeight="semibold">
-                      <chakra.span>wNEAR</chakra.span>
-                    </Text>
-                  </Flex>
+                <Flex direction="row">
+                  {path &&
+                    path.map((ticker: any, idx: number, arr: any) => {
+                      return (
+                        <>
+                          <Flex marginLeft="4px" alignItems="center">
+                            <Text fontSize="11px" fontWeight="semibold">
+                              <chakra.span>{ticker}</chakra.span>
+                            </Text>
+                            {arr.length - 1 > idx ? (
+                              <Flex alignItems="center" marginLeft="4px">
+                                <FontAwesomeIcon
+                                  icon={faArrowRight}
+                                  color="whitesmoke"
+                                  height="10px"
+                                  width="12px"
+                                />
+                              </Flex>
+                            ) : null}
+                          </Flex>
+                        </>
+                      );
+                    })}
                 </Flex>
               </Flex>
               <Box fontWeight="semibold" textAlign="right">

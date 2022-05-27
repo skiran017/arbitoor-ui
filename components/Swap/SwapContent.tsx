@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Flex, Box, Input } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { providers } from 'near-api-js';
-import { faArrowsRotate, faSliders } from '@fortawesome/free-solid-svg-icons';
+import { faSliders, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import TokenList from '../TokenList/TokenList';
 import ToggleToken from '../ToggleToken/ToggleToken';
 import SwapSide from './SwapSide';
@@ -11,12 +11,17 @@ import CustomButton from '../CustomButton/CustomButton';
 import { tokenList } from '../../utils/tokenList';
 import { Token } from '../../types';
 import { useWalletSelector } from '../../hooks/WalletSelectorContext';
-import { Comet, EstimateSwapView, getExpectedOutputFromActions } from '@comethq/comet-sdk';
+import {
+  Comet,
+  EstimateSwapView,
+  getExpectedOutputFromActions,
+} from '@comethq/comet-sdk';
 import BigNumber from 'bignumber.js';
+import LoadingBestPrice from '../BestPrice/LoadingBestPrice';
 
-interface SwapRoute {
-  output: string,
-  actions: EstimateSwapView[],
+export interface SwapRoute {
+  output: string;
+  actions: EstimateSwapView[];
 }
 
 /**
@@ -27,28 +32,33 @@ interface SwapRoute {
  * @returns
  */
 function getRoutePath(actions: EstimateSwapView[]) {
-  const routes: string[] = []
+  const routes: string[] = [];
 
   for (let i = 0; i < actions.length; i++) {
-    const action = actions[i]
-    const route = action.nodeRoute!.map(token => {
-      const saved = tokenList.find(savedToken => {
-        return savedToken.id == token
-      })
+    const action = actions[i];
+    const route = action
+      .nodeRoute!.map((token) => {
+        const saved = tokenList.find((savedToken) => {
+          return savedToken.id == token;
+        });
 
-      return saved ? saved.ticker : token.slice(0, 10)
-    }).join(' -> ')
+        return saved ? saved.ticker : token.slice(0, 10);
+      })
+      .join(' -> ');
+
     if (i === 0 || routes[routes.length - 1] !== route) {
-      routes.push(route)
+      routes.push(route);
     }
   }
-  return routes.join(', ')
+  return routes.join(', ').split(' -> ');
 }
 
 function SwapContent() {
   const [payToken, setPayToken] = useState<Token>(tokenList[0]);
   const [receiveToken, setReceiveToken] = useState<Token>(tokenList[1]);
   const [inputAmount, setInputAmount] = useState<string>();
+  const [path, setPath] = useState<string[]>();
+  const [loading, setLoading] = useState<boolean>();
 
   // TODO Remove placeholder routes on the UI. Display generated path once 'routes' is set
   const [routes, setRoutes] = useState<SwapRoute[]>();
@@ -57,38 +67,34 @@ function SwapContent() {
   useEffect(() => {
     async function findRoutes() {
       if (inputAmount && payToken && receiveToken) {
-        const inputAmountAdjusted = new BigNumber(10).pow(payToken.decimals).multipliedBy(new BigNumber(inputAmount))
-
+        const inputAmountAdjusted = new BigNumber(10)
+          .pow(payToken.decimals)
+          .multipliedBy(new BigNumber(inputAmount));
+        setLoading(true);
         try {
-          const provider = new providers.JsonRpcProvider({ url: selector.network.nodeUrl });
+          const provider = new providers.JsonRpcProvider({
+            url: 'https://near-mainnet--rpc--archive.datahub.figment.io/apikey/e7051fbb390e25bd106777e8194529c7',
+          });
           const comet = new Comet({
             provider,
             user: 'test.near',
-            routeCacheDuration: 1000
-          })
+            routeCacheDuration: 1000,
+          });
 
           const actions = await comet.computeRoutes({
             inputToken: payToken.id,
             outputToken: receiveToken.id,
             inputAmount: inputAmountAdjusted.toString(),
-          })
+          });
 
           // Use this to display swap paths on the UI
-          const refPath = getRoutePath(actions.ref)
-          console.log('ref path', refPath)
+          const refPath = getRoutePath(actions.ref);
+          setPath(refPath);
 
           const [refOutput, jumboOutput] = await Promise.all([
-            getExpectedOutputFromActions(
-              actions.ref,
-              receiveToken.id,
-              5
-            ),
-            getExpectedOutputFromActions(
-              actions.jumbo,
-              receiveToken.id,
-              5
-            )
-          ])
+            getExpectedOutputFromActions(actions.ref, receiveToken.id, 5),
+            getExpectedOutputFromActions(actions.jumbo, receiveToken.id, 5),
+          ]);
           if (refOutput.gte(jumboOutput)) {
             setRoutes([
               {
@@ -98,18 +104,19 @@ function SwapContent() {
               {
                 output: jumboOutput.toString(),
                 actions: actions.jumbo,
-              }
-            ])
+              },
+            ]);
           }
+          setLoading(false);
         } catch (error) {
-          console.error(error)
+          console.error(error);
+          setLoading(false);
         }
       }
     }
 
-    findRoutes()
-  }, [inputAmount])
-
+    findRoutes();
+  }, [payToken, receiveToken, inputAmount]);
 
   const handleSignIn = () => {
     selector.show();
@@ -126,7 +133,7 @@ function SwapContent() {
     setReceiveToken(payToken);
   }
   function handleSwap() {
-    console.log('tokens', payToken, receiveToken)
+    console.log('tokens', payToken, receiveToken);
   }
   return (
     <>
@@ -141,7 +148,7 @@ function SwapContent() {
         <Flex marginBottom="16px" justifyContent="flex-end" alignItems="center">
           <Box paddingRight="18px">
             <FontAwesomeIcon
-              icon={faArrowsRotate}
+              icon={faRotateRight}
               color="whitesmoke"
               height="18px"
               width="18px"
@@ -181,7 +188,9 @@ function SwapContent() {
               placeholder="0.00"
               type="number"
               value={inputAmount}
-              onChange={(event) => { setInputAmount(event.target.value) }}
+              onChange={(event) => {
+                setInputAmount(event.target.value);
+              }}
             />
           </Flex>
         </Box>
@@ -191,8 +200,18 @@ function SwapContent() {
           <SwapSide swapSide="receive" balanceAmount={1} />
 
           <TokenList selectToken={selectReceiveToken} token={receiveToken} />
-
-          <BestPrice />
+          {loading || !path?.length ? (
+            <LoadingBestPrice
+              text={
+                inputAmount
+                  ? 'Please wait while we fetch the best price...'
+                  : ''
+              }
+              display={!inputAmount ? 'none' : 'flex'}
+            />
+          ) : (
+            <BestPrice routes={routes} path={path} />
+          )}
         </Box>
       </Flex>
 
@@ -206,6 +225,7 @@ function SwapContent() {
         text="Connect Wallet"
         isSignedIn={selector.isSignedIn()}
         swapHandler={selector.isSignedIn() ? handleSwap : handleSignIn}
+        disabled={selector.isSignedIn() && !path?.length}
       />
     </>
   );

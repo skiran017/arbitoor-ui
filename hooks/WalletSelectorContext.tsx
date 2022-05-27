@@ -63,7 +63,7 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
         }),
       ],
     })
-      .then(instance => {
+      .then((instance) => {
         return instance.getAccounts().then(async (newAccounts) => {
           syncAccountState(localStorage.getItem('accountId'), newAccounts);
 
