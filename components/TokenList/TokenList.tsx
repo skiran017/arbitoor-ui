@@ -82,7 +82,7 @@ function TokenList({ selectToken, token }: Props) {
           maxHeight="90vh"
           height="100%"
           overflow="hidden"
-          width="100%"
+          width={['92%', '92%', '100%', '100%']}
           position="fixed"
           background="#26262C"
         >
