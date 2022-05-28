@@ -57,7 +57,8 @@ function SwapContent() {
   const [payToken, setPayToken] = useState<Token>(tokenList[0]);
   const [receiveToken, setReceiveToken] = useState<Token>(tokenList[1]);
   const [inputAmount, setInputAmount] = useState<string>();
-  const [path, setPath] = useState<string[]>();
+  const [refPath, setRefPath] = useState<string[]>();
+  const [jumboPath, setJumboPath] = useState<string[]>();
   const [loading, setLoading] = useState<boolean>();
 
   // TODO Remove placeholder routes on the UI. Display generated path once 'routes' is set
@@ -89,7 +90,9 @@ function SwapContent() {
 
           // Use this to display swap paths on the UI
           const refPath = getRoutePath(actions.ref);
-          setPath(refPath);
+          setRefPath(refPath);
+          const jumboPath = getRoutePath(actions.jumbo);
+          setJumboPath(jumboPath);
 
           const [refOutput, jumboOutput] = await Promise.all([
             getExpectedOutputFromActions(actions.ref, receiveToken.id, 5),
@@ -200,7 +203,7 @@ function SwapContent() {
           <SwapSide swapSide="receive" balanceAmount={1} />
 
           <TokenList selectToken={selectReceiveToken} token={receiveToken} />
-          {loading || !path?.length ? (
+          {loading || !refPath?.length ? (
             <LoadingBestPrice
               text={
                 inputAmount
@@ -210,7 +213,7 @@ function SwapContent() {
               display={!inputAmount ? 'none' : 'flex'}
             />
           ) : (
-            <BestPrice routes={routes} path={path} />
+            <BestPrice routes={routes} refPath={refPath} jumboPath={jumboPath} />
           )}
         </Box>
       </Flex>

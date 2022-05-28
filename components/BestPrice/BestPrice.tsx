@@ -11,10 +11,11 @@ type RouteItem = {
 };
 interface Routes {
   routes: Array<RouteItem> | undefined;
-  path: string[] | undefined;
+  refPath: string[] | undefined;
+  jumboPath: string[] | undefined;
 }
 
-function BestPrice({ routes, path }: Routes) {
+function BestPrice({ routes, refPath, jumboPath }: Routes) {
   return (
     <Box maxHeight="163px" height="100%">
       <Box position="relative" height="163px" w="100%">
@@ -48,8 +49,8 @@ function BestPrice({ routes, path }: Routes) {
                   <chakra.span>Ref.finance</chakra.span>
                 </Flex>
                 <Flex direction="row">
-                  {path &&
-                    path.map((ticker: any, idx: number, arr: any) => {
+                  {refPath &&
+                    refPath.map((ticker: any, idx: number, arr: any) => {
                       return (
                         <>
                           <Flex marginLeft="4px" alignItems="center">
@@ -101,8 +102,8 @@ function BestPrice({ routes, path }: Routes) {
                   <chakra.span>Jumbo.finance</chakra.span>
                 </Flex>
                 <Flex direction="row">
-                  {path &&
-                    path.map((ticker: any, idx: number, arr: any) => {
+                  {jumboPath &&
+                    jumboPath.map((ticker: any, idx: number, arr: any) => {
                       return (
                         <>
                           <Flex marginLeft="4px" alignItems="center">
