@@ -24,7 +24,7 @@ export default function NavLinks({ styleClass }: Props) {
           cursor="pointer"
           color="whitesmoke"
           opacity="0.6"
-          _hover={{ color: 'white', opacity: '1' }}
+          _hover={{ color: '#de8f17', opacity: '1' }}
         >
           <FontAwesomeIcon icon={link.icon} height="18px" width="18px" />
           <Link href={`${link.url}`}>
