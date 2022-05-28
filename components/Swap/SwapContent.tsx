@@ -3,7 +3,6 @@ import { Flex, Box, Input } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { providers } from 'near-api-js';
 import { faSliders, faRotateRight } from '@fortawesome/free-solid-svg-icons';
-import { Transaction } from '@near-wallet-selector/core';
 import TokenList from '../TokenList/TokenList';
 import ToggleToken from '../ToggleToken/ToggleToken';
 import SwapSide from './SwapSide';
@@ -20,6 +19,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { debounce } from '../../utils/helpers';
 import LoadingBestPrice from '../BestPrice/LoadingBestPrice';
+import { Transaction } from '@near-wallet-selector/core';
 
 export interface SwapRoute {
   output: string;
@@ -75,10 +75,8 @@ function SwapContent() {
   useEffect(() => {
     async function findRoutes() {
       if (inputAmount && payToken && receiveToken && selector) {
-        const inputAmountAdjusted = new BigNumber(10)
-          .pow(payToken.decimals)
-          .multipliedBy(new BigNumber(inputAmount));
-        setLoading(true);
+        const inputAmountAdjusted = new BigNumber(10).pow(payToken.decimals).multipliedBy(new BigNumber(inputAmount))
+
         try {
           // const provider = new providers.JsonRpcProvider({
           //   url: 'https://near-mainnet--rpc--archive.datahub.figment.io/apikey/e7051fbb390e25bd106777e8194529c7',
@@ -89,10 +87,10 @@ function SwapContent() {
           const comet = new Comet({
             provider,
             user: localStorage.getItem('accountId')!,
-            routeCacheDuration: 1000,
-          });
+            routeCacheDuration: 1000
+          })
 
-          console.log('generating actions');
+          console.log('generating actions')
           const actions = await comet.computeRoutes({
             inputToken: payToken.id,
             outputToken: receiveToken.id,
@@ -135,6 +133,7 @@ function SwapContent() {
                 actions: actions.jumbo,
               },
             ]);
+            console.log('ref output', refOutput.toString(), 'jumbo', jumboOutput.toString())
             const txs = await comet.nearInstantSwap({
               exchange: 'v2.ref-finance.near',
               tokenIn: payToken.id,
