@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  useDisclosure,
   Drawer,
   DrawerBody,
   DrawerHeader,
@@ -12,10 +11,10 @@ import {
   Text,
 } from '@chakra-ui/react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { links } from '../../utils/navLinks';
 
 function Sidebar({ isOpen, toggleSidebar }: any) {
-  const { onOpen, onClose } = useDisclosure();
   return (
     <Drawer
       placement="right"
@@ -26,7 +25,20 @@ function Sidebar({ isOpen, toggleSidebar }: any) {
       <DrawerOverlay />
       <DrawerContent bg="#26262C" color="whitesmoke">
         <DrawerCloseButton />
-        <DrawerHeader borderBottomWidth="1px">Arbitoor</DrawerHeader>
+        <DrawerHeader borderBottomWidth="1px" paddingBottom="0">
+          <Image
+            src="/monogram.svg"
+            alt="brand monogram"
+            height={50}
+            width={75}
+          />
+          <Image
+            src="/assets/logo.svg"
+            alt="brand logo"
+            height={50}
+            width={200}
+          />
+        </DrawerHeader>
         <DrawerBody>
           {links.map((link) => (
             <Flex

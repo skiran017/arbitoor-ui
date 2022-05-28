@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { Flex, Text, Box, Button } from '@chakra-ui/react';
+import { Flex, Box, Button } from '@chakra-ui/react';
 import NavLinks from '../NavLinks';
 import CustomButton from '../CustomButton/CustomButton';
 import Link from 'next/link';
@@ -30,24 +30,19 @@ function Navbar() {
       p={['1rem 2rem', '1rem 2rem', '1rem 4rem', '1rem 4rem']}
       fontWeight="600"
     >
-      <Flex flex="1 1 0%">
+      <Flex
+        flex={['0.5', '0.5', '0.5', '1 1 0%']}
+        display={['block', 'block', 'block', 'flex']}
+      >
         <Flex flex="0.25">
           <Link href="/">
             <Flex cursor="pointer">
               <Image
-                src="/assets/logo.png"
+                src="/assets/logo.svg"
                 alt="brand logo"
-                height={40}
-                width={50}
+                height={50}
+                width={200}
               />
-              <Text
-                fontSize="xl"
-                padding="4px"
-                marginLeft="4px"
-                color="whitesmoke"
-              >
-                Arbitoor
-              </Text>
             </Flex>
           </Link>
         </Flex>
@@ -57,7 +52,7 @@ function Navbar() {
       <Flex
         flex="1 1 0%"
         justifyContent="flex-end"
-        display={['none', 'none', 'flex', 'flex']}
+        display={['none', 'none', 'none', 'flex']}
       >
         {selector.isSignedIn() ? (
           <AccountDetails />
@@ -73,7 +68,7 @@ function Navbar() {
           />
         )}
       </Flex>
-      <Box display={['flex', 'flex', 'none', 'none']}>
+      <Box display={['flex', 'flex', 'flex', 'none']}>
         <Button variant="contained" onClick={toggleSidebar}>
           <FontAwesomeIcon
             icon={faBars}
