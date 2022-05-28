@@ -13,6 +13,7 @@ import { Token } from '../../types';
 import { useWalletSelector } from '../../hooks/WalletSelectorContext';
 import { Comet, EstimateSwapView, getExpectedOutputFromActions } from '@comethq/comet-sdk';
 import BigNumber from 'bignumber.js';
+import { Transaction } from '@near-wallet-selector/core';
 
 interface SwapRoute {
   output: string,
@@ -56,22 +57,24 @@ function SwapContent() {
 
   useEffect(() => {
     async function findRoutes() {
-      if (inputAmount && payToken && receiveToken) {
+      if (inputAmount && payToken && receiveToken && selector) {
         const inputAmountAdjusted = new BigNumber(10).pow(payToken.decimals).multipliedBy(new BigNumber(inputAmount))
 
         try {
           const provider = new providers.JsonRpcProvider({ url: selector.network.nodeUrl });
           const comet = new Comet({
             provider,
-            user: 'test.near',
+            user: localStorage.getItem('accountId')!,
             routeCacheDuration: 1000
           })
 
+          console.log('generating actions')
           const actions = await comet.computeRoutes({
             inputToken: payToken.id,
             outputToken: receiveToken.id,
-            inputAmount: inputAmountAdjusted.toString(),
+            inputAmount: inputAmountAdjusted.toFixed(),
           })
+          console.log('got actions')
 
           // Use this to display swap paths on the UI
           const refPath = getRoutePath(actions.ref)
@@ -89,18 +92,54 @@ function SwapContent() {
               5
             )
           ])
+          console.log('ref output', refOutput.toString(), 'jumbo', jumboOutput.toString())
+
+          // TODO once the user presses the swap button, construct the TXs from actions saved in state.
+          // The actions giving the best output amount should be used
           if (refOutput.gte(jumboOutput)) {
-            setRoutes([
-              {
-                output: refOutput.toString(),
-                actions: actions.ref,
-              },
-              {
-                output: jumboOutput.toString(),
-                actions: actions.jumbo,
-              }
-            ])
+            const txs = await comet.nearInstantSwap({
+              exchange: 'v2.ref-finance.near',
+              tokenIn: payToken.id,
+              tokenOut: receiveToken.id,
+              tokenInDecimals: payToken.decimals,
+              tokenOutDecimals: receiveToken.decimals,
+              amountIn: inputAmountAdjusted.toFixed(),
+              swapsToDo: actions.ref,
+              slippageTolerance: 5
+            })
+
+            await selector.signAndSendTransactions({
+              transactions: txs
+            })
+          } else {
+            const txs = await comet.nearInstantSwap({
+              exchange: 'v1.jumbo-exchange.near',
+              tokenIn: payToken.id,
+              tokenOut: receiveToken.id,
+              tokenInDecimals: payToken.decimals,
+              tokenOutDecimals: receiveToken.decimals,
+              amountIn: inputAmountAdjusted.toFixed(),
+              swapsToDo: actions.ref,
+              slippageTolerance: 5
+            })
+
+            await selector.signAndSendTransactions({
+              transactions: txs
+            })
           }
+
+          // if (refOutput.gte(jumboOutput)) {
+          //   setRoutes([
+          //     {
+          //       output: refOutput.toString(),
+          //       actions: actions.ref,
+          //     },
+          //     {
+          //       output: jumboOutput.toString(),
+          //       actions: actions.jumbo,
+          //     }
+          //   ])
+          // }
         } catch (error) {
           console.error(error)
         }
@@ -181,6 +220,7 @@ function SwapContent() {
               placeholder="0.00"
               type="number"
               value={inputAmount}
+              // TODO add debouncing
               onChange={(event) => { setInputAmount(event.target.value) }}
             />
           </Flex>

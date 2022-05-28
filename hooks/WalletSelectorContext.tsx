@@ -47,6 +47,13 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
   useEffect(() => {
     NearWalletSelector.init({
       network: 'mainnet',
+      // network: {
+      //   networkId: 'mainnet',
+      //   nodeUrl: 'https://near-mainnet--rpc--archive.datahub.figment.io/apikey/1ce7ba3bbf636a5385aa1bc2c75e5d8c',
+      //   helperUrl: '',
+      //   explorerUrl: '',
+      //   restApiUrl: '',
+      // },
       contractId: 'wrap.near',
       wallets: [
         setupNearWallet({
