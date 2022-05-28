@@ -40,7 +40,7 @@ function TokenList({ selectToken, token }: Props) {
         width="33%"
         backgroundColor="transparent"
         // _hover={{ backgroundColor: 'rgb(243 244 246/1)' }}
-        _hover={{ backgroundColor: '#1E4577' }}
+        _hover={{ backgroundColor: '#de8f1761' }}
       >
         <Flex>
           <Flex alignItems="center">
@@ -151,7 +151,7 @@ function TokenList({ selectToken, token }: Props) {
                       <chakra.a key={token.id} onClick={onClose}>
                         <Box
                           color="whitesmoke"
-                          _hover={{ bgColor: '#1E4577' }}
+                          _hover={{ bgColor: '#de8f1761' }}
                           padding="14px 48px"
                           onClick={() => {
                             selectToken(token);

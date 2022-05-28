@@ -21,7 +21,7 @@ function BestPrice() {
             border="solid 3px transparent"
             style={{
               backgroundImage:
-                'linear-gradient(#101010, #101010), radial-gradient(circle at top left, #ffdd00,#20ff3a)',
+                'linear-gradient(#101010, #101010), radial-gradient(circle at top left, #ff0078,#ffb720)',
               backgroundOrigin: 'border-box',
               backgroundClip: 'content-box, border-box',
             }}
