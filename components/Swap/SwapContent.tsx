@@ -3,6 +3,7 @@ import { Flex, Box, Input } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { providers } from 'near-api-js';
 import { faSliders, faRotateRight } from '@fortawesome/free-solid-svg-icons';
+import { Transaction } from '@near-wallet-selector/core';
 import TokenList from '../TokenList/TokenList';
 import ToggleToken from '../ToggleToken/ToggleToken';
 import SwapSide from './SwapSide';
@@ -17,6 +18,7 @@ import {
   getExpectedOutputFromActions,
 } from '@comethq/comet-sdk';
 import BigNumber from 'bignumber.js';
+import { debounce } from '../../utils/helpers';
 import LoadingBestPrice from '../BestPrice/LoadingBestPrice';
 
 export interface SwapRoute {
@@ -59,6 +61,11 @@ function SwapContent() {
   const [inputAmount, setInputAmount] = useState<string>();
   const [refPath, setRefPath] = useState<string[]>();
   const [jumboPath, setJumboPath] = useState<string[]>();
+  const [refTransactionPayload, setRefTransactionPayload] = useState<any>();
+  const [jumboTransactionPayload, setJumboTransactionPayload] = useState<any>();
+  const [actions, setActions] = useState<any>();
+  const [refOutput, setRefOutput] = useState<any>();
+  const [jumboOutput, setJumboOutput] = useState<any>();
   const [loading, setLoading] = useState<boolean>();
 
   // TODO Remove placeholder routes on the UI. Display generated path once 'routes' is set
@@ -67,26 +74,32 @@ function SwapContent() {
 
   useEffect(() => {
     async function findRoutes() {
-      if (inputAmount && payToken && receiveToken) {
+      if (inputAmount && payToken && receiveToken && selector) {
         const inputAmountAdjusted = new BigNumber(10)
           .pow(payToken.decimals)
           .multipliedBy(new BigNumber(inputAmount));
         setLoading(true);
         try {
+          // const provider = new providers.JsonRpcProvider({
+          //   url: 'https://near-mainnet--rpc--archive.datahub.figment.io/apikey/e7051fbb390e25bd106777e8194529c7',
+          // });
           const provider = new providers.JsonRpcProvider({
-            url: 'https://near-mainnet--rpc--archive.datahub.figment.io/apikey/e7051fbb390e25bd106777e8194529c7',
+            url: selector.network.nodeUrl,
           });
           const comet = new Comet({
             provider,
-            user: 'test.near',
+            user: localStorage.getItem('accountId')!,
             routeCacheDuration: 1000,
           });
 
+          console.log('generating actions');
           const actions = await comet.computeRoutes({
             inputToken: payToken.id,
             outputToken: receiveToken.id,
-            inputAmount: inputAmountAdjusted.toString(),
+            inputAmount: inputAmountAdjusted.toFixed(),
           });
+          console.log('actions received');
+          setActions(actions);
 
           // Use this to display swap paths on the UI
           const refPath = getRoutePath(actions.ref);
@@ -95,9 +108,22 @@ function SwapContent() {
           setJumboPath(jumboPath);
 
           const [refOutput, jumboOutput] = await Promise.all([
-            getExpectedOutputFromActions(actions.ref, receiveToken.id, 5),
-            getExpectedOutputFromActions(actions.jumbo, receiveToken.id, 5),
+            getExpectedOutputFromActions(
+              provider,
+              actions.ref,
+              receiveToken.id,
+              5
+            ),
+            getExpectedOutputFromActions(
+              provider,
+              actions.jumbo,
+              receiveToken.id,
+              5
+            ),
           ]);
+          setRefOutput(refOutput);
+          setJumboOutput(jumboOutput);
+
           if (refOutput.gte(jumboOutput)) {
             setRoutes([
               {
@@ -109,6 +135,37 @@ function SwapContent() {
                 actions: actions.jumbo,
               },
             ]);
+            const txs = await comet.nearInstantSwap({
+              exchange: 'v2.ref-finance.near',
+              tokenIn: payToken.id,
+              tokenOut: receiveToken.id,
+              tokenInDecimals: payToken.decimals,
+              tokenOutDecimals: receiveToken.decimals,
+              amountIn: inputAmountAdjusted.toFixed(),
+              swapsToDo: actions.ref,
+              slippageTolerance: 5,
+            });
+            console.log({ txs });
+            setRefTransactionPayload(txs);
+            await selector.signAndSendTransactions({
+              transactions: txs,
+            });
+          } else {
+            const txs = await comet.nearInstantSwap({
+              exchange: 'v1.jumbo-exchange.near',
+              tokenIn: payToken.id,
+              tokenOut: receiveToken.id,
+              tokenInDecimals: payToken.decimals,
+              tokenOutDecimals: receiveToken.decimals,
+              amountIn: inputAmountAdjusted.toFixed(),
+              swapsToDo: actions.ref,
+              slippageTolerance: 5,
+            });
+
+            setJumboTransactionPayload(txs);
+            await selector.signAndSendTransactions({
+              transactions: txs,
+            });
           }
           setLoading(false);
         } catch (error) {
@@ -120,6 +177,12 @@ function SwapContent() {
 
     findRoutes();
   }, [payToken, receiveToken, inputAmount]);
+
+  const fetcherWithDebounce = debounce((evt: any) => {
+    if (evt.target.value) {
+      //TODO: call the function to get routes
+    }
+  }, 2000);
 
   const handleSignIn = () => {
     selector.show();
@@ -135,8 +198,19 @@ function SwapContent() {
     setPayToken(receiveToken);
     setReceiveToken(payToken);
   }
-  function handleSwap() {
+
+  async function handleSwap() {
     console.log('tokens', payToken, receiveToken);
+
+    if (refOutput.gte(jumboOutput)) {
+      await selector.signAndSendTransactions({
+        transactions: refTransactionPayload,
+      });
+    } else {
+      await selector.signAndSendTransactions({
+        transactions: jumboTransactionPayload,
+      });
+    }
   }
   return (
     <>
@@ -192,6 +266,7 @@ function SwapContent() {
               type="number"
               value={inputAmount}
               onChange={(event) => {
+                // fetcherWithDebounce(event);
                 setInputAmount(event.target.value);
               }}
             />
@@ -213,7 +288,12 @@ function SwapContent() {
               display={!inputAmount ? 'none' : 'flex'}
             />
           ) : (
-            <BestPrice routes={routes} refPath={refPath} jumboPath={jumboPath} />
+            <BestPrice
+              refOutput={+refOutput.toString()}
+              jumboOutput={+jumboOutput.toString()}
+              refPath={refPath}
+              jumboPath={jumboPath}
+            />
           )}
         </Box>
       </Flex>
@@ -228,7 +308,7 @@ function SwapContent() {
         text="Connect Wallet"
         isSignedIn={selector.isSignedIn()}
         swapHandler={selector.isSignedIn() ? handleSwap : handleSignIn}
-        disabled={selector.isSignedIn() && !path?.length}
+        disabled={selector.isSignedIn() && !refPath?.length}
       />
     </>
   );

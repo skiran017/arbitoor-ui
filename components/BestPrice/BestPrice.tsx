@@ -10,12 +10,15 @@ type RouteItem = {
   actions: EstimateSwapView[];
 };
 interface Routes {
-  routes: Array<RouteItem> | undefined;
+  // routes: Array<RouteItem> | undefined;
+  refOutput: number | undefined;
+  jumboOutput: number | undefined;
   refPath: string[] | undefined;
   jumboPath: string[] | undefined;
 }
 
-function BestPrice({ routes, refPath, jumboPath }: Routes) {
+function BestPrice({ refOutput, jumboOutput, refPath, jumboPath }: Routes) {
+  console.log(jumboOutput?.toFixed(3));
   return (
     <Box maxHeight="163px" height="100%">
       <Box position="relative" height="163px" w="100%">
@@ -53,7 +56,7 @@ function BestPrice({ routes, refPath, jumboPath }: Routes) {
                     refPath.map((ticker: any, idx: number, arr: any) => {
                       return (
                         <>
-                          <Flex marginLeft="4px" alignItems="center">
+                          <Flex marginLeft="4px" alignItems="center" key={idx}>
                             <Text fontSize="11px" fontWeight="semibold">
                               <chakra.span>{ticker}</chakra.span>
                             </Text>
@@ -74,7 +77,7 @@ function BestPrice({ routes, refPath, jumboPath }: Routes) {
                 </Flex>
               </Flex>
               <Box fontWeight="semibold" textAlign="right">
-                0.196850908
+                {refOutput && refOutput.toFixed(3)}
               </Box>
             </Flex>
           </Box>
@@ -106,7 +109,7 @@ function BestPrice({ routes, refPath, jumboPath }: Routes) {
                     jumboPath.map((ticker: any, idx: number, arr: any) => {
                       return (
                         <>
-                          <Flex marginLeft="4px" alignItems="center">
+                          <Flex marginLeft="4px" alignItems="center" key={idx}>
                             <Text fontSize="11px" fontWeight="semibold">
                               <chakra.span>{ticker}</chakra.span>
                             </Text>
@@ -127,7 +130,7 @@ function BestPrice({ routes, refPath, jumboPath }: Routes) {
                 </Flex>
               </Flex>
               <Box fontWeight="semibold" textAlign="right">
-                0.196850908
+                {jumboOutput && jumboOutput.toFixed(3)}
               </Box>
             </Flex>
           </Box>

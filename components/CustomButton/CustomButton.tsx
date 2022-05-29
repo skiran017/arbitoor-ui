@@ -28,7 +28,7 @@ function CustomButton({
         marginTop="16px"
         onClick={swapHandler}
         // bg="linear-gradient(90deg, rgba(65,65,65,1) 0%, rgba(0,0,0,1) 100%)"
-        bg="radial-gradient(circle at left top, rgb(255, 0, 120), rgb(255, 183, 32))"
+        bg="radial-gradient(circle at left top, #ff0078, #ffb720 100%)"
         _hover={{ opacity: '1' }}
         {...props}
       >
@@ -48,7 +48,8 @@ function CustomButton({
           marginTop="16px"
           onClick={swapHandler}
           opacity="0.75"
-          bg="linear-gradient(90deg, rgba(65,65,65,1) 0%, rgba(0,0,0,1) 100%)"
+          // bg="linear-gradient(90deg, rgba(65,65,65,1) 0%, rgba(0,0,0,1) 100%)"
+          bg="radial-gradient(circle at left top, #ff0078, #ffb720 100%)"
           _hover={{ opacity: '1' }}
           {...props}
         >
