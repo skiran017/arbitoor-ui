@@ -46,8 +46,15 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
 
   useEffect(() => {
     NearWalletSelector.init({
-      network: 'testnet',
-      contractId: 'guest-book.testnet',
+      network: 'mainnet',
+      // network: {
+      //   networkId: 'mainnet',
+      //   nodeUrl: 'https://near-mainnet--rpc--archive.datahub.figment.io/apikey/1ce7ba3bbf636a5385aa1bc2c75e5d8c',
+      //   helperUrl: '',
+      //   explorerUrl: '',
+      //   restApiUrl: '',
+      // },
+      contractId: 'wrap.near',
       wallets: [
         setupNearWallet({
           iconUrl: '/assets/walletSelector/near-wallet-icon.png',
@@ -63,13 +70,14 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
         }),
       ],
     })
-      .then((instance: any) => {
-        return instance.getAccounts().then(async (newAccounts: any) => {
+      .then((instance) => {
+        return instance.getAccounts().then(async (newAccounts) => {
           syncAccountState(localStorage.getItem('accountId'), newAccounts);
 
           // eslint-disable-next-line
           // @ts-ignore-next-line
-          window.selector = instance;
+          // window.selector = instance;
+
           setSelector(instance);
         });
       })

@@ -63,7 +63,7 @@ function SearchDropdown() {
           {topTradedPairs.map((pair) => {
             return (
               <chakra.a href={pair.url} key={pair.id} color="whitesmoke">
-                <Box _hover={{ bgColor: '#1E4577' }} padding="14px 48px">
+                <Box _hover={{ bgColor: '#de8f1761' }} padding="14px 48px">
                   <Flex>
                     <Flex>
                       <Flex direction="column">
