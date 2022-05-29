@@ -40,13 +40,13 @@ function TokenList({ selectToken, token }: Props) {
         width="33%"
         backgroundColor="transparent"
         // _hover={{ backgroundColor: 'rgb(243 244 246/1)' }}
-        _hover={{ backgroundColor: '#1E4577' }}
+        _hover={{ backgroundColor: '#de8f1761' }}
       >
         <Flex>
           <Flex alignItems="center">
             <Image
-              alt="ticker symbol"
-              src="/assets/tickerLogos/usn.png"
+              alt="ticker logo"
+              src={token?.icon}
               width={22}
               height={5}
               borderRadius="12px"
@@ -82,7 +82,7 @@ function TokenList({ selectToken, token }: Props) {
           maxHeight="90vh"
           height="100%"
           overflow="hidden"
-          width="100%"
+          width={['92%', '92%', '100%', '100%']}
           position="fixed"
           background="#26262C"
         >
@@ -151,13 +151,20 @@ function TokenList({ selectToken, token }: Props) {
                       <chakra.a key={token.id} onClick={onClose}>
                         <Box
                           color="whitesmoke"
-                          _hover={{ bgColor: '#1E4577' }}
+                          _hover={{ bgColor: '#de8f1761' }}
                           padding="14px 48px"
                           onClick={() => {
                             selectToken(token);
                           }}
                         >
                           <Flex>
+                            <Image
+                              alt="ticker logo"
+                              src={token.icon}
+                              width="30px"
+                              height="28px"
+                              borderRadius="12px"
+                            />
                             <Flex>
                               <Flex direction="column">
                                 <Text>{token.ticker}</Text>
@@ -166,7 +173,6 @@ function TokenList({ selectToken, token }: Props) {
                             </Flex>
                           </Flex>
                         </Box>
-                        <Text></Text>
                       </chakra.a>
                     );
                   })}
