@@ -45,8 +45,8 @@ function TokenList({ selectToken, token }: Props) {
         <Flex>
           <Flex alignItems="center">
             <Image
-              alt="ticker symbol"
-              src="/assets/tickerLogos/usn.png"
+              alt="ticker logo"
+              src={token?.icon}
               width={22}
               height={5}
               borderRadius="12px"
@@ -158,6 +158,13 @@ function TokenList({ selectToken, token }: Props) {
                           }}
                         >
                           <Flex>
+                            <Image
+                              alt="ticker logo"
+                              src={token.icon}
+                              width="30px"
+                              height="28px"
+                              borderRadius="12px"
+                            />
                             <Flex>
                               <Flex direction="column">
                                 <Text>{token.ticker}</Text>
@@ -166,7 +173,6 @@ function TokenList({ selectToken, token }: Props) {
                             </Flex>
                           </Flex>
                         </Box>
-                        <Text></Text>
                       </chakra.a>
                     );
                   })}
