@@ -59,7 +59,7 @@ function SwapContent() {
   const [payToken, setPayToken] = useState<Token>(tokenList[0]);
   const [receiveToken, setReceiveToken] = useState<Token>(tokenList[1]);
   const [inputAmount, setInputAmount] = useState<string>();
-  const [paths, setPaths] = useState<RouteInfo[]>()
+  const [paths, setPaths] = useState<RouteInfo[]>();
   const [transactionPayload, setTransactionPayload] = useState<Transaction[]>();
   const [actions, setActions] = useState<any>();
   const [loading, setLoading] = useState<boolean>();
@@ -69,9 +69,15 @@ function SwapContent() {
   const { selector } = useWalletSelector();
 
   useEffect(() => {
+    fetcherWithDebounce();
+  }, [payToken, receiveToken, inputAmount]);
+
+  const fetcherWithDebounce = debounce(() => {
     async function findRoutes() {
       if (inputAmount && payToken && receiveToken && selector) {
-        const inputAmountAdjusted = new BigNumber(10).pow(payToken.decimals).multipliedBy(new BigNumber(inputAmount))
+        const inputAmountAdjusted = new BigNumber(10)
+          .pow(payToken.decimals)
+          .multipliedBy(new BigNumber(inputAmount));
 
         try {
           // const provider = new providers.JsonRpcProvider({
@@ -83,10 +89,10 @@ function SwapContent() {
           const comet = new Comet({
             provider,
             user: localStorage.getItem('accountId')!,
-            routeCacheDuration: 1000
-          })
+            routeCacheDuration: 1000,
+          });
 
-          console.log('generating actions')
+          console.log('generating actions');
           const actions = await comet.computeRoutes({
             inputToken: payToken.id,
             outputToken: receiveToken.id,
@@ -115,13 +121,16 @@ function SwapContent() {
           ]);
 
           if (refOutput.gte(jumboOutput)) {
-            setPaths([{
-              path: refPath,
-              output: refOutput.toFixed(3),
-            }, {
-              path: jumboPath,
-              output: jumboOutput.toFixed(3),
-            }])
+            setPaths([
+              {
+                path: refPath,
+                output: refOutput.toFixed(3),
+              },
+              {
+                path: jumboPath,
+                output: jumboOutput.toFixed(3),
+              },
+            ]);
 
             setRoutes([
               {
@@ -133,7 +142,12 @@ function SwapContent() {
                 actions: actions.jumbo,
               },
             ]);
-            console.log('ref output', refOutput.toString(), 'jumbo', jumboOutput.toString())
+            console.log(
+              'ref output',
+              refOutput.toString(),
+              'jumbo',
+              jumboOutput.toString()
+            );
             const txs = await comet.nearInstantSwap({
               exchange: 'v2.ref-finance.near',
               tokenIn: payToken.id,
@@ -153,10 +167,12 @@ function SwapContent() {
               {
                 path: jumboPath,
                 output: jumboOutput.toFixed(3),
-              }, {
-              path: refPath,
-              output: refOutput.toFixed(3),
-            }])
+              },
+              {
+                path: refPath,
+                output: refOutput.toFixed(3),
+              },
+            ]);
             const txs = await comet.nearInstantSwap({
               exchange: 'v1.jumbo_exchange.near',
               tokenIn: payToken.id,
@@ -178,15 +194,12 @@ function SwapContent() {
         }
       }
     }
-
     findRoutes();
-  }, [payToken, receiveToken, inputAmount]);
-
-  const fetcherWithDebounce = debounce((evt: any) => {
-    if (evt.target.value) {
-      //TODO: call the function to get routes
-    }
   }, 2000);
+
+  // useEffect(() => {
+  //   fetcherWithDebounce();
+  // }, [inputAmount]);
 
   const handleSignIn = () => {
     selector.show();
@@ -211,7 +224,6 @@ function SwapContent() {
         transactions: transactionPayload,
       });
     }
-
 
     // if (refOutput.gte(jumboOutput)) {
     //   await selector.signAndSendTransactions({
@@ -277,7 +289,6 @@ function SwapContent() {
               type="number"
               value={inputAmount}
               onChange={(event) => {
-                // fetcherWithDebounce(event);
                 setInputAmount(event.target.value);
               }}
             />
@@ -299,8 +310,9 @@ function SwapContent() {
               display={!inputAmount ? 'none' : 'flex'}
             />
           ) : (
-
-            paths.length === 2 && <BestPrice routes = {paths as [RouteInfo, RouteInfo]}/>
+            paths.length === 2 && (
+              <BestPrice routes={paths as [RouteInfo, RouteInfo]} />
+            )
           )}
         </Box>
       </Flex>
