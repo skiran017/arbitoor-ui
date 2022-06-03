@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Flex, Box, Input } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { providers } from 'near-api-js';
@@ -17,9 +17,10 @@ import {
   getExpectedOutputFromActions,
 } from 'comet-sdk';
 import BigNumber from 'bignumber.js';
-import { debounce } from '../../utils/helpers';
+// import { debounce } from '../../utils/helpers';
 import LoadingBestPrice from '../BestPrice/LoadingBestPrice';
 import { Transaction } from '@near-wallet-selector/core';
+import _ from 'lodash';
 
 export interface SwapRoute {
   output: string;
@@ -58,7 +59,7 @@ function getRoutePath(actions: EstimateSwapView[]) {
 function SwapContent() {
   const [payToken, setPayToken] = useState<Token>(tokenList[0]);
   const [receiveToken, setReceiveToken] = useState<Token>(tokenList[1]);
-  const [inputAmount, setInputAmount] = useState<string>();
+  const [inputAmount, setInputAmount] = useState<string>('');
   const [paths, setPaths] = useState<RouteInfo[]>();
   const [transactionPayload, setTransactionPayload] = useState<Transaction[]>();
   const [actions, setActions] = useState<any>();
@@ -69,137 +70,142 @@ function SwapContent() {
   const { selector } = useWalletSelector();
 
   useEffect(() => {
-    fetcherWithDebounce();
+    if (inputAmount !== '') {
+      memoizedFetcher(inputAmount);
+    }
   }, [payToken, receiveToken, inputAmount]);
 
-  const fetcherWithDebounce = debounce(() => {
-    async function findRoutes() {
-      if (inputAmount && payToken && receiveToken && selector) {
-        const inputAmountAdjusted = new BigNumber(10)
-          .pow(payToken.decimals)
-          .multipliedBy(new BigNumber(inputAmount));
+  const memoizedFetcher = useCallback(
+    (input: string) => {
+      fetcherWithDebounce(input);
+      setPaths([]);
+    },
+    [payToken, receiveToken]
+  );
 
-        try {
-          // const provider = new providers.JsonRpcProvider({
-          //   url: 'https://near-mainnet--rpc--archive.datahub.figment.io/apikey/e7051fbb390e25bd106777e8194529c7',
-          // });
-          const provider = new providers.JsonRpcProvider({
-            url: selector.network.nodeUrl,
-          });
-          const comet = new Comet({
+  const fetcherWithDebounce = _.debounce(findRoutes, 1000);
+
+  async function findRoutes(input: string) {
+    if (input && payToken && receiveToken && selector) {
+      const inputAmountAdjusted = new BigNumber(10)
+        .pow(payToken.decimals)
+        .multipliedBy(new BigNumber(input));
+
+      try {
+        // const provider = new providers.JsonRpcProvider({
+        //   url: 'https://near-mainnet--rpc--archive.datahub.figment.io/apikey/e7051fbb390e25bd106777e8194529c7',
+        // });
+        const provider = new providers.JsonRpcProvider({
+          url: selector.network.nodeUrl,
+        });
+        const comet = new Comet({
+          provider,
+          user: localStorage.getItem('accountId')!,
+          routeCacheDuration: 1000,
+        });
+
+        console.log('generating actions');
+        const actions = await comet.computeRoutes({
+          inputToken: payToken.id,
+          outputToken: receiveToken.id,
+          inputAmount: inputAmountAdjusted.toFixed(),
+        });
+        console.log('actions received');
+        setActions(actions);
+
+        // Use this to display swap paths on the UI
+        const refPath = getRoutePath(actions.ref);
+        const jumboPath = getRoutePath(actions.jumbo);
+
+        const [refOutput, jumboOutput] = await Promise.all([
+          getExpectedOutputFromActions(
             provider,
-            user: localStorage.getItem('accountId')!,
-            routeCacheDuration: 1000,
-          });
+            actions.ref,
+            receiveToken.id,
+            5
+          ),
+          getExpectedOutputFromActions(
+            provider,
+            actions.jumbo,
+            receiveToken.id,
+            5
+          ),
+        ]);
 
-          console.log('generating actions');
-          const actions = await comet.computeRoutes({
-            inputToken: payToken.id,
-            outputToken: receiveToken.id,
-            inputAmount: inputAmountAdjusted.toFixed(),
-          });
-          console.log('actions received');
-          setActions(actions);
-
-          // Use this to display swap paths on the UI
-          const refPath = getRoutePath(actions.ref);
-          const jumboPath = getRoutePath(actions.jumbo);
-
-          const [refOutput, jumboOutput] = await Promise.all([
-            getExpectedOutputFromActions(
-              provider,
-              actions.ref,
-              receiveToken.id,
-              5
-            ),
-            getExpectedOutputFromActions(
-              provider,
-              actions.jumbo,
-              receiveToken.id,
-              5
-            ),
+        if (refOutput.gte(jumboOutput)) {
+          setPaths([
+            {
+              path: refPath,
+              output: refOutput.toFixed(3),
+            },
+            {
+              path: jumboPath,
+              output: jumboOutput.toFixed(3),
+            },
           ]);
 
-          if (refOutput.gte(jumboOutput)) {
-            setPaths([
-              {
-                path: refPath,
-                output: refOutput.toFixed(3),
-              },
-              {
-                path: jumboPath,
-                output: jumboOutput.toFixed(3),
-              },
-            ]);
+          setRoutes([
+            {
+              output: refOutput.toString(),
+              actions: actions.ref,
+            },
+            {
+              output: jumboOutput.toString(),
+              actions: actions.jumbo,
+            },
+          ]);
+          console.log(
+            'ref output',
+            refOutput.toString(),
+            'jumbo',
+            jumboOutput.toString()
+          );
+          const txs = await comet.nearInstantSwap({
+            exchange: 'v2.ref-finance.near',
+            tokenIn: payToken.id,
+            tokenOut: receiveToken.id,
+            tokenInDecimals: payToken.decimals,
+            tokenOutDecimals: receiveToken.decimals,
+            amountIn: inputAmountAdjusted.toFixed(),
+            swapsToDo: actions.ref,
+            slippageTolerance: 5,
+          });
+          console.log({ txs });
 
-            setRoutes([
-              {
-                output: refOutput.toString(),
-                actions: actions.ref,
-              },
-              {
-                output: jumboOutput.toString(),
-                actions: actions.jumbo,
-              },
-            ]);
-            console.log(
-              'ref output',
-              refOutput.toString(),
-              'jumbo',
-              jumboOutput.toString()
-            );
-            const txs = await comet.nearInstantSwap({
-              exchange: 'v2.ref-finance.near',
-              tokenIn: payToken.id,
-              tokenOut: receiveToken.id,
-              tokenInDecimals: payToken.decimals,
-              tokenOutDecimals: receiveToken.decimals,
-              amountIn: inputAmountAdjusted.toFixed(),
-              swapsToDo: actions.ref,
-              slippageTolerance: 5,
-            });
-            console.log({ txs });
+          // setRefTransactionPayload(txs);
+          setTransactionPayload(txs);
+        } else {
+          setPaths([
+            {
+              path: jumboPath,
+              output: jumboOutput.toFixed(3),
+            },
+            {
+              path: refPath,
+              output: refOutput.toFixed(3),
+            },
+          ]);
+          const txs = await comet.nearInstantSwap({
+            exchange: 'v1.jumbo_exchange.near',
+            tokenIn: payToken.id,
+            tokenOut: receiveToken.id,
+            tokenInDecimals: payToken.decimals,
+            tokenOutDecimals: receiveToken.decimals,
+            amountIn: inputAmountAdjusted.toFixed(),
+            swapsToDo: actions.ref,
+            slippageTolerance: 5,
+          });
 
-            // setRefTransactionPayload(txs);
-            setTransactionPayload(txs);
-          } else {
-            setPaths([
-              {
-                path: jumboPath,
-                output: jumboOutput.toFixed(3),
-              },
-              {
-                path: refPath,
-                output: refOutput.toFixed(3),
-              },
-            ]);
-            const txs = await comet.nearInstantSwap({
-              exchange: 'v1.jumbo_exchange.near',
-              tokenIn: payToken.id,
-              tokenOut: receiveToken.id,
-              tokenInDecimals: payToken.decimals,
-              tokenOutDecimals: receiveToken.decimals,
-              amountIn: inputAmountAdjusted.toFixed(),
-              swapsToDo: actions.ref,
-              slippageTolerance: 5,
-            });
-
-            // setJumboTransactionPayload(txs);
-            setTransactionPayload(txs);
-          }
-          setLoading(false);
-        } catch (error) {
-          console.error(error);
-          setLoading(false);
+          // setJumboTransactionPayload(txs);
+          setTransactionPayload(txs);
         }
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
       }
     }
-    findRoutes();
-  }, 2000);
-
-  // useEffect(() => {
-  //   fetcherWithDebounce();
-  // }, [inputAmount]);
+  }
 
   const handleSignIn = () => {
     selector.show();
@@ -214,6 +220,11 @@ function SwapContent() {
   function tokenSwitchHandler() {
     setPayToken(receiveToken);
     setReceiveToken(payToken);
+    memoizedFetcher(inputAmount);
+  }
+
+  function handleInputChange(evt: any) {
+    setInputAmount(evt.target.value);
   }
 
   async function handleSwap() {
@@ -288,9 +299,7 @@ function SwapContent() {
               placeholder="0.00"
               type="number"
               value={inputAmount}
-              onChange={(event) => {
-                setInputAmount(event.target.value);
-              }}
+              onChange={handleInputChange}
             />
           </Flex>
         </Box>
